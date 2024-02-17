@@ -1,0 +1,117 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+body{
+    background: linear-gradient(45deg, #f06291, #fffde7);
+}
+.container{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.calculator{
+    position: relative;
+    height: auto;
+    width: auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgb(136, 33, 33);
+    background-color: #fff;
+    #display{
+        color: rgb(10, 10, 10);
+        margin: 0 10px;
+        height: 120px;
+        width: auto;
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-end;
+        margin-bottom: 30px;
+        font-weight: 800;
+        font-size: 30px;
+    }
+    #equal{
+        height: 130px;
+    }
+    button#clear{
+        background-color: #ffd5d8;
+        color: #fc4552;
+    }
+    button.btn-number{
+        background-color: #c3eaff;
+        color: black;
+    }
+    button.btn-operator{
+        background-color: #dde2e6;
+        color: rgb(169, 68, 182);
+    }
+    button.btn-equal{
+        background-color: #58b3e4;
+        color: black;
+    }
+
+    /* theme dark*/
+    &.dark{
+    background-color: #1d1c1c;
+    #display{
+        color: #fff;
+    }
+    
+    #clear{
+        color: #853939;
+        background-color: #58b3e4;
+    }
+    .btn-operator{
+        color: #dde2e6;
+        background-color: #f06291;
+    }
+    .btn-number{
+        color: #dde2e6;
+        background-color: #786ce4;
+    }
+}
+
+}
+.theme-toggler{
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    color: #fffde7;
+    cursor: pointer;
+    z-index: 1;
+    &::before{
+        position: absolute;
+        content: "";
+        height: 30px;
+        width: 30px;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background-color: #9c9292;
+        z-index: -1;
+    }
+}
+.theme-toggler .active{
+    color: #0e0d0d;
+    &::before{
+        background-color: #332f2f;
+    }
+}
+button{
+    height: 60px;
+    width: 60px;
+    border: 0;
+    border-radius: 30px;
+    margin: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    &:hover{
+        transform: scale(1.1);
+    }
+}
