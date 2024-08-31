@@ -1,0 +1,330 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap");
+:root {
+  --primary-color: #4a90e2;
+  --secondary-color: #50c878;
+  --accent-color: #ff6b6b;
+  --text-color: #333;
+  --bg-color: #f9f9f9;
+  --card-bg: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  overflow-x: hidden;
+}
+
+.hero {
+  background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(./tran-mau-tri-tam-g-pKprPg5yw-unsplash.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-content {
+  text-align: center;
+  z-index: 2;
+}
+
+.hero-image {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border: 5px solid var(--accent-color);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+.hero h1 {
+  font-size: 3.5rem;
+  margin-top: 1rem;
+  color: var(--primary-color);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hero p {
+  font-size: 1.5rem;
+  color: var(--card-bg);
+  font-weight: bold;
+}
+
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  opacity: 0.1;
+  z-index: 1;
+}
+
+nav {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+  list-style-type: none;
+  display: flex;
+  justify-content: center;
+}
+
+nav ul li {
+  margin: 0 1rem;
+}
+
+nav ul li a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+nav ul li a::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background-color: var(--accent-color);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+nav ul li a:hover::after {
+  transform: scaleX(1);
+}
+
+.container {
+  background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(./nikita-kachanovsky-g-YiX8ynmnY-unsplash.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 3rem;
+  color: var(--primary-color);
+  font-size: 2.5rem;
+  position: relative;
+}
+
+.section-title::after {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 3px;
+  background-color: var(--accent-color);
+  margin: 10px auto;
+}
+
+.about-me {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4rem;
+  background-color: var(--card-bg);
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.about-me p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.skill-icon {
+  font-size: 3rem;
+  color: var(--primary-color);
+  transition: all 0.3s ease;
+}
+
+.skill-icon:hover {
+  color: var(--accent-color);
+  transform: scale(1.2);
+}
+
+.projects-container {
+  overflow: hidden;
+  margin-bottom: 4rem;
+}
+
+.projects-scroll {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  gap: 2rem;
+  padding-bottom: 1rem;
+}
+
+.projects-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.project-card {
+  flex: 0 0 300px;
+  background-color: var(--card-bg);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  scroll-snap-align: start;
+}
+
+.project-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.project-image {
+  width: 100%;
+  height: 200px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+.project-card:hover .project-image {
+  transform: scale(1.1);
+}
+
+.project-info {
+  padding: 1.5rem;
+}
+
+.project-title {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary-color);
+}
+
+.project-description {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.scroll-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.scroll-btn:hover {
+  background-color: var(--accent-color);
+}
+
+.scroll-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+footer {
+  background-color: var(--primary-color);
+  color: white;
+  text-align: center;
+  padding: 2rem;
+  margin-top: 4rem;
+}
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+  .hero p {
+    font-size: 1.2rem;
+  }
+  .about-me {
+    flex-direction: column;
+    text-align: center;
+  }
+  .skills {
+    gap: 1rem;
+  }
+  .skill-icon {
+    font-size: 2.5rem;
+  }
+}
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-in-up {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes colorChange {
+  0% {
+    color: var(--primary-color);
+  }
+  50% {
+    color: var(--accent-color);
+  }
+  100% {
+    color: var(--primary-color);
+  }
+}
+.color-change {
+  animation: colorChange 4s infinite;
+}/*# sourceMappingURL=style.css.map */
