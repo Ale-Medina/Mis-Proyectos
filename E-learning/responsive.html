@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Web Design Course</title>
+    <link rel="shortcut icon" href="./img/icons8-código-fuente-64.png" type="image/x-icon">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+      
+        :root {
+          --primary-color: #4a90e2;
+          --secondary-color: #f39c12;
+          --tertiary-color: #2ecc71;
+          --text-color: #333;
+          --bg-color: #f9f9f9;
+          --white: #ffffff;
+        }
+      
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+      
+        body {
+          font-family: 'Poppins', sans-serif;
+          line-height: 1.6;
+          color: var(--text-color);
+          background-color: var(--bg-color);
+        }
+      
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 20px;
+        }
+      
+        header {
+          background-color: var(--white);
+          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+          position: fixed;
+          width: 100%;
+          top: 0;
+          z-index: 1000;
+        }
+      
+        nav {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 15px 0;
+        }
+      
+        .logo {
+          font-size: 24px;
+          font-weight: 700;
+          color: var(--primary-color);
+        }
+      
+        .nav-links {
+          display: flex;
+          gap: 20px;
+          list-style: none;
+        }
+      
+        .nav-links a {
+          color: var(--text-color);
+          text-decoration: none;
+          font-weight: 600;
+          transition: color 0.3s ease;
+        }
+      
+        .nav-links a:hover {
+          color: var(--primary-color);
+        }
+      
+        .hero {
+          background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('./img/hero.png') no-repeat center center;
+          background-size: cover;
+          color: var(--white);
+          text-align: center;
+          padding: 150px 0;
+          margin-top: 60px;
+        }
+      
+        .hero h1 {
+          font-size: 48px;
+          margin-bottom: 20px;
+        }
+      
+        .hero p {
+          font-size: 20px;
+          max-width: 600px;
+          margin: 0 auto 30px;
+        }
+      
+        .btn {
+          display: inline-block;
+          background-color: var(--secondary-color);
+          color: var(--white);
+          padding: 12px 24px;
+          border-radius: 5px;
+          text-decoration: none;
+          font-weight: 600;
+          transition: background-color 0.3s ease;
+        }
+      
+        .btn:hover {
+          background-color: #e67e22;
+        }
+      
+        .section {
+          padding: 80px 0;
+        }
+      
+        .section-title {
+          font-size: 36px;
+          margin-bottom: 40px;
+          text-align: center;
+        }
+      
+        .course-info {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          flex-wrap: wrap;
+          gap: 40px;
+        }
+      
+        .course-details {
+          flex: 1;
+          min-width: 300px;
+        }
+      
+        .course-details h3 {
+          font-size: 24px;
+          margin-bottom: 20px;
+        }
+      
+        .course-details ul {
+          list-style-type: none;
+          padding-left: 0;
+        }
+      
+        .course-details li {
+          margin-bottom: 10px;
+        }
+      
+        .course-details li::before {
+          content: "✓";
+          color: var(--tertiary-color);
+          font-weight: bold;
+          margin-right: 10px;
+        }
+      
+        .course-curriculum {
+          flex: 2;
+          min-width: 300px;
+        }
+      
+        .module {
+          background-color: var(--white);
+          border-radius: 10px;
+          padding: 20px;
+          margin-bottom: 20px;
+          box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+      
+        .module h4 {
+          font-size: 20px;
+          margin-bottom: 10px;
+        }
+      
+        .module ul {
+          list-style-type: none;
+          padding-left: 20px;
+        }
+      
+        .module li {
+          margin-bottom: 5px;
+        }
+      
+        .responsive-demo {
+          background-color: var(--white);
+          border-radius: 10px;
+          padding: 20px;
+          margin-top: 40px;
+          box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+      
+        .devices {
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 20px;
+        }
+      
+        .device {
+          background-color: var(--bg-color);
+          border: 2px solid var(--primary-color);
+          border-radius: 10px;
+          padding: 10px;
+          text-align: center;
+        }
+      
+        .device-screen {
+          width: 100%;
+          height: 150px;
+          background-color: var(--white);
+          margin-bottom: 10px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-weight: bold;
+          color: var(--primary-color);
+        }
+      
+        #mobile-screen {
+          max-width: 200px;
+        }
+      
+        #tablet-screen {
+          max-width: 300px;
+        }
+      
+        #desktop-screen {
+          max-width: 400px;
+        }
+      
+        footer {
+          background-color: #333;
+          color: var(--white);
+          padding: 40px 0;
+          text-align: center;
+        }
+      
+        @media (max-width: 768px) {
+          .hero h1 {
+            font-size: 36px;
+          }
+      
+          .hero p {
+            font-size: 18px;
+          }
+      
+          .course-info {
+            flex-direction: column;
+          }
+      
+          .course-details, .course-curriculum {
+            width: 100%;
+          }
+        }
+      
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      
+        .animate-fadeInUp {
+          animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <header>
+      <nav class="container">
+        <div class="logo">Holistic Learning Hub</div>
+        <ul class="nav-links">
+          <li><a href="./inicio.html">Home</a></li>
+          <li><a href="#course-details">Course Details</a></li>
+          <li><a href="#curriculum">Curriculum</a></li>
+          <li><a href="#responsive-demo">Demo</a></li>
+        </ul>
+      </nav>
+    </header>
+  
+    <main>
+      <section class="hero">
+        <div class="container">
+          <h1>Responsive Web Design Course</h1>
+          <p>Master the art of creating websites that look great on any device</p>
+          <a href="#enroll" class="btn">Enroll Now</a>
+        </div>
+      </section>
+  
+      <section id="course-details" class="section">
+        <div class="container">
+          <h2 class="section-title">Course Details</h2>
+          <div class="course-info">
+            <div class="course-details animate-fadeInUp">
+              <h3>What You'll Learn</h3>
+              <ul>
+                <li>Fundamentals of responsive design</li>
+                <li>Flexible layouts with CSS Grid and Flexbox</li>
+                <li>Mobile-first design approach</li>
+                <li>Media queries and breakpoints</li>
+                <li>Responsive images and typography</li>
+                <li>Performance optimization for mobile devices</li>
+              </ul>
+            </div>
+            <div class="course-details animate-fadeInUp">
+              <h3>Course Information</h3>
+              <ul>
+                <li>Intermediate level</li>
+                <li>6 weeks, 3-4 hours per week</li>
+                <li>Hands-on projects and assignments</li>
+                <li>Certificate upon completion</li>
+                <li>Access to online community</li>
+                <li>Lifetime access to course materials</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+  
+      <section id="curriculum" class="section">
+        <div class="container">
+          <h2 class="section-title">Course Curriculum</h2>
+          <div class="course-curriculum">
+            <div class="module animate-fadeInUp">
+              <h4>Module 1: Introduction to Responsive Design</h4>
+              <ul>
+                <li>Understanding the need for responsive design</li>
+                <li>The evolution of web design</li>
+                <li>Key principles of responsive web design</li>
+                <li>Setting up your development environment</li>
+              </ul>
+            </div>
+            <div class="module animate-fadeInUp">
+              <h4>Module 2: Flexible Layouts</h4>
+              <ul>
+                <li>CSS Grid system</li>
+                <li>Flexbox for responsive layouts</li>
+                <li>Combining Grid and Flexbox</li>
+                <li>Creating a responsive navigation menu</li>
+              </ul>
+            </div>
+            <div class="module animate-fadeInUp">
+              <h4>Module 3: Mobile-First Approach</h4>
+              <ul>
+                <li>Understanding mobile-first design</li>
+                <li>Progressive enhancement vs graceful degradation</li>
+                <li>Designing for touch interfaces</li>
+                <li>Mobile-first CSS strategies</li>
+              </ul>
+            </div>
+            <div class="module animate-fadeInUp">
+              <h4>Module 4: Media Queries and Breakpoints</h4>
+              <ul>
+                <li>Introduction to media queries</li>
+                <li>Choosing effective breakpoints</li>
+                <li>Creating responsive layouts with media queries</li>
+                <li>Testing designs across devices</li>
+              </ul>
+            </div>
+            <div class="module animate-fadeInUp">
+              <h4>Module 5: Responsive Images and Typography</h4>
+              <ul>
+                <li>Flexible images and videos</li>
+                <li>Using srcset and sizes attributes</li>
+                <li>Responsive typography techniques</li>
+                <li>Optimizing web fonts for performance</li>
+              </ul>
+            </div>
+            <div class="module animate-fadeInUp">
+              <h4>Module 6: Performance Optimization</h4>
+              <ul>
+                <li>Mobile performance considerations</li>
+                <li>Optimizing CSS and JavaScript</li>
+                <li>Lazy loading techniques</li>
+                <li>Testing and improving page speed</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+  
+      <section id="responsive-demo" class="section">
+        <div class="container">
+          <h2 class="section-title">Responsive Design in Action</h2>
+          <div class="responsive-demo animate-fadeInUp">
+            <p>See how a responsive design adapts to different screen sizes:</p>
+            <div class="devices">
+              <div class="device">
+                <div id="mobile-screen" class="device-screen">Mobile</div>
+                <p>320px</p>
+              </div>
+              <div class="device">
+                <div id="tablet-screen" class="device-screen">Tablet</div>
+                <p>768px</p>
+              </div>
+              <div class="device">
+                <div id="desktop-screen" class="device-screen">Desktop</div>
+                <p>1024px+</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+  
+      <section id="enroll" class="section">
+        <div class="container">
+          <h2 class="section-title">Ready to Master Responsive Web Design?</h2>
+          <div class="animate-fadeInUp" style="text-align: center;">
+            <p>Enroll now and start creating websites that look great on any device!</p>
+            <a href="./contacto.html" class="btn">Enroll in This Course</a>
+          </div>
+        </div>
+      </section>
+    </main>
+  
+    <footer>
+      <div class="container">
+        <p>&copy; 2023 Holistic Learning Hub. All rights reserved.</p>
+      </div>
+    </footer>
+  
+    <script>
+      document.addEventListener('DOMContentLoaded', (event) => {
+        const animateOnScroll = (entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('animate-fadeInUp');
+              observer.unobserve(entry.target);
+            }
+          });
+        };
+  
+        const observer = new IntersectionObserver(animateOnScroll, {
+          root: null,
+          threshold: 0.1
+        });
+  
+        document.querySelectorAll('.animate-fadeInUp').forEach(el => {
+          observer.observe(el);
+        });
+      });
+  
+      // Smooth scrolling for navigation links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+  
+          document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+          });
+        });
+      });
+  
+      // Simple responsive demo
+      const mobileScreen = document.getElementById('mobile-screen');
+      const tabletScreen = document.getElementById('tablet-screen');
+      const desktopScreen = document.getElementById('desktop-screen');
+  
+      function updateScreens() {
+        const width = window.innerWidth;
+        if (width < 768) {
+          mobileScreen.style.backgroundColor = '#4a90e2';
+          mobileScreen.style.color = '#ffffff';
+          tabletScreen.style.backgroundColor = '#ffffff';
+          tabletScreen.style.color = '#4a90e2';
+          desktopScreen.style.backgroundColor = '#ffffff';
+          desktopScreen.style.color = '#4a90e2';
+        } else if (width < 1024) {
+          mobileScreen.style.backgroundColor = '#ffffff';
+          mobileScreen.style.color = '#4a90e2';
+          tabletScreen.style.backgroundColor = '#4a90e2';
+          tabletScreen.style.color = '#ffffff';
+          desktopScreen.style.backgroundColor = '#ffffff';
+          desktopScreen.style.color = '#4a90e2';
+        } else {
+          mobileScreen.style.backgroundColor = '#ffffff';
+          mobileScreen.style.color = '#4a90e2';
+          tabletScreen.style.backgroundColor = '#ffffff';
+          tabletScreen.style.color = '#4a90e2';
+          desktopScreen.style.backgroundColor = '#4a90e2';
+          desktopScreen.style.color = '#ffffff';
+        }
+      }
+  
+      window.addEventListener('resize', updateScreens);
+      updateScreens();
+    </script>
+  </body>
+</html>

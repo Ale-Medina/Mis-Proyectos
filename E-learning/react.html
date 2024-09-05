@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Fundamentals</title>
+    <link rel="shortcut icon" href="./img/logo/icons8-código-fuente-64.png" type="image/x-icon">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+      
+        :root {
+          --primary-color: #61dafb;
+          --secondary-color: #282c34;
+          --text-color: #333;
+          --bg-color: #f4f4f4;
+          --white: #ffffff;
+        }
+      
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+      
+        body {
+          font-family: 'Roboto', sans-serif;
+          line-height: 1.6;
+          color: var(--text-color);
+          background-color: var(--bg-color);
+        }
+      
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 20px;
+          text-align: center;
+        }
+      
+        header {
+          background-color: var(--secondary-color);
+          color: var(--white);
+          padding: 1rem 0;
+          position: fixed;
+          width: 100%;
+          top: 0;
+          z-index: 1000;
+        }
+      
+        nav {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+      
+        .logo {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: var(--primary-color);
+        }
+      
+        .nav-links {
+          display: flex;
+          gap: 20px;
+          list-style: none;
+        }
+      
+        .nav-links a {
+          color: var(--white);
+          text-decoration: none;
+          font-weight: 500;
+          transition: color 0.3s ease;
+        }
+      
+        .nav-links a:hover {
+          color: var(--primary-color);
+        }
+      
+        main {
+          margin-top: 60px;
+        }
+      
+        .hero {
+          background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('./img/photo-1633356122102-3fe601e05bd2.jpeg') no-repeat center center;
+          background-size: cover;
+          color: var(--white);
+          text-align: center;
+          padding: 100px 0;
+        }
+      
+        .hero h1 {
+          font-size: 2.5rem;
+          margin-bottom: 1rem;
+        }
+      
+        .hero p {
+          font-size: 1.2rem;
+          max-width: 600px;
+          margin: 0 auto 2rem;
+        }
+      
+        .btn {
+          display: inline-block;
+          background-color: var(--primary-color);
+          color: var(--secondary-color);
+          padding: 0.8rem 1.5rem;
+          border-radius: 5px;
+          text-decoration: none;
+          font-weight: 700;
+          transition: background-color 0.3s ease;
+        }
+      
+        .btn:hover {
+          background-color: #4fa8d5;
+        }
+      
+        .section {
+          padding: 4rem 0;
+        }
+      
+        .section-title {
+          text-align: center;
+          font-size: 2rem;
+          margin-bottom: 2rem;
+        }
+      
+        .course-info {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 2rem;
+          align-items: start;
+        }
+      
+        .course-details, .course-curriculum {
+          background-color: var(--white);
+          padding: 2rem;
+          border-radius: 10px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+      
+        .course-details h3, .course-curriculum h3 {
+          font-size: 1.5rem;
+          margin-bottom: 1rem;
+          color: var(--secondary-color);
+        }
+      
+        .course-details ul, .course-curriculum ul {
+          list-style-type: none;
+        }
+      
+        .course-details li, .course-curriculum li {
+          margin-bottom: 0.5rem;
+        }
+      
+        .course-curriculum li {
+          display: flex;
+          align-items: center;
+        }
+      
+        .course-curriculum li::before {
+          content: "✓";
+          color: var(--primary-color);
+          font-weight: bold;
+          margin-right: 0.5rem;
+        }
+      
+        .instructor {
+          display: flex;
+          align-items: center;
+          margin-top: 2rem;
+        }
+      
+        .instructor img {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          margin-right: 1rem;
+        }
+      
+        .instructor-info h4 {
+          font-size: 1.2rem;
+          margin-bottom: 0.5rem;
+        }
+      
+        footer {
+          background-color: var(--secondary-color);
+          color: var(--white);
+          text-align: center;
+          padding: 2rem 0;
+          margin-top: 4rem;
+        }
+      
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+      
+        .fade-in {
+          animation: fadeIn 1s ease-out;
+        }
+      
+        @media (max-width: 768px) {
+          .course-info {
+            grid-template-columns: 1fr;
+          }
+        }
+    </style>
+</head>
+<body>
+    <header>
+      <nav class="container">
+        <div class="logo">Holistic Learning Hub</div>
+        <ul class="nav-links">
+          <li><a href="./inicio.html">Home</a></li>
+          <li><a href="#course-details">Course Details</a></li>
+          <li><a href="#curriculum">Curriculum</a></li>
+          <li><a href="#instructor">Instructor</a></li>
+        </ul>
+      </nav>
+    </header>
+  
+    <main>
+      <section class="hero">
+        <div class="container">
+          <h1 class="fade-in">React Fundamentals</h1>
+          <p class="fade-in">Master the essentials of React and build modern, interactive user interfaces</p>
+          <a href="#enroll" class="btn fade-in">Enroll Now</a>
+        </div>
+      </section>
+  
+      <section id="course-details" class="section">
+        <div class="container">
+          <h2 class="section-title">Course Details</h2>
+          <div class="course-info">
+            <div class="course-details fade-in">
+              <h3>What You'll Learn</h3>
+              <ul>
+                <li>React core concepts and JSX syntax</li>
+                <li>Component-based architecture</li>
+                <li>State management and hooks</li>
+                <li>Handling events and forms in React</li>
+                <li>React Router for single-page applications</li>
+                <li>API integration and data fetching</li>
+                <li>Best practices and performance optimization</li>
+              </ul>
+            </div>
+            <div class="course-curriculum fade-in">
+              <h3>Course Curriculum</h3>
+              <ul>
+                <li>Introduction to React and its ecosystem</li>
+                <li>Setting up a React development environment</li>
+                <li>Creating and composing React components</li>
+                <li>Understanding props and state</li>
+                <li>Working with lists and conditional rendering</li>
+                <li>React Hooks (useState, useEffect, useContext)</li>
+                <li>Building forms and handling user input</li>
+                <li>Making API calls and managing asynchronous operations</li>
+                <li>Routing with React Router</li>
+                <li>State management with Context API and Redux</li>
+                <li>Testing React applications</li>
+                <li>Deploying React apps to production</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+  
+      <section id="instructor" class="section">
+        <div class="container">
+          <h2 class="section-title">Meet Your Instructor</h2>
+          <div class="instructor fade-in">
+            <img src="./img/istockphoto-1830126474-1024x1024.jpg" alt="Rick Johnson, React expert and course instructor" width="100" height="100">
+            <div class="instructor-info">
+              <h4>Sarah Johnson</h4>
+              <p>Rick is a seasoned React developer with over 8 years of experience building large-scale applications. She's passionate about teaching and has helped thousands of students master React through her courses and workshops.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+  
+      <section id="enroll" class="section">
+        <div class="container">
+          <h2 class="section-title">Ready to Master React?</h2>
+          <div class="text-center fade-in">
+            <p>Enroll now and start building amazing user interfaces with React!</p>
+            <a href="./contacto.html" class="btn">Enroll for $99</a>
+          </div>
+        </div>
+      </section>
+    </main>
+  
+    <footer>
+      <div class="container">
+        <p>&copy; 2023 Holistic Learning Hub. All rights reserved.</p>
+      </div>
+    </footer>
+  
+    <script>
+      document.addEventListener('DOMContentLoaded', (event) => {
+        const observerOptions = {
+          root: null,
+          rootMargin: '0px',
+          threshold: 0.1
+        };
+  
+        const observer = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('fade-in');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, observerOptions);
+  
+        document.querySelectorAll('.fade-in').forEach(el => {
+          observer.observe(el);
+        });
+      });
+  
+      // Smooth scrolling for navigation
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+          });
+        });
+      });
+  
+      // Simple React demo
+      const App = () => {
+        const [count, setCount] = React.useState(0);
+        return React.createElement('div', null, [
+          React.createElement('h3', null, 'React Counter Demo'),
+          React.createElement('p', null, `Count: ${count}`),
+          React.createElement('button', { onClick: () => setCount(count + 1) }, 'Increment')
+        ]);
+      };
+  
+      ReactDOM.render(React.createElement(App), document.getElementById('react-demo'));
+    </script>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+  </body>
+</html>

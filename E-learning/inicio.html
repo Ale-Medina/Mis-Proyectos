@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses Holistic Learning Hub</title>
+    <link rel="shortcut icon" href="./img/icons8-código-fuente-64.png" type="image/x-icon">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+      
+        :root {
+          --primary-color: #4a90e2;
+          --secondary-color: #f39c12;
+          --tertiary-color: #2ecc71;
+          --text-color: #333;
+          --bg-color: #f9f9f9;
+          --white: #ffffff;
+        }
+      
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+      
+        body {
+          font-family: 'Poppins', sans-serif;
+          line-height: 1.6;
+          color: var(--text-color);
+          background-color: var(--bg-color);
+        }
+      
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 20px;
+          text-align: center;
+        }
+      
+        header {
+          background-color: var(--white);
+          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+          position: fixed;
+          width: 100%;
+          top: 0;
+          z-index: 1000;
+        }
+      
+        nav {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 15px 0;
+        }
+      
+        .logo {
+          font-size: 24px;
+          font-weight: 700;
+          color: var(--primary-color);
+        }
+      
+        .nav-links {
+          display: flex;
+          gap: 20px;
+          list-style: none;
+        }
+      
+        .nav-links a {
+          color: var(--text-color);
+          text-decoration: none;
+          font-weight: 600;
+          transition: color 0.3s ease;
+        }
+      
+        .nav-links a:hover {
+          color: var(--primary-color);
+        }
+      
+        .hero {
+          background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('./img/pngtree-a-conceptual-illustration-of-web-design-development-and-seo-optimization-in-image_13584944.png') no-repeat center center;
+          background-size: cover;
+          color: var(--white);
+          text-align: center;
+          padding: 150px 0;
+          margin-top: 60px;
+        }
+      
+        .hero h1 {
+          font-size: 48px;
+          margin-bottom: 20px;
+        }
+      
+        .hero p {
+          font-size: 20px;
+          max-width: 600px;
+          margin: 0 auto 30px;
+        }
+      
+        .btn {
+          display: inline-block;
+          background-color: var(--secondary-color);
+          color: var(--white);
+          padding: 12px 24px;
+          border-radius: 5px;
+          text-decoration: none;
+          font-weight: 600;
+          transition: background-color 0.3s ease;
+        }
+      
+        .btn:hover {
+          background-color: #e67e22;
+        }
+      
+        .section-title {
+          text-align: center;
+          font-size: 36px;
+          margin: 60px 0 40px;
+        }
+      
+        .courses {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 30px;
+          margin-bottom: 60px;
+        }
+      
+        .course {
+          background-color: var(--white);
+          border-radius: 10px;
+          overflow: hidden;
+          box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+          transition: transform 0.3s ease;
+        }
+      
+        .course:hover {
+          transform: translateY(-5px);
+        }
+      
+        .course-image {
+          width: 100%;
+          height: 200px;
+          object-fit: cover;
+        }
+      
+        .course-content {
+          padding: 20px;
+        }
+      
+        .course-title {
+          font-size: 24px;
+          margin-bottom: 10px;
+        }
+      
+        .course-description {
+          font-size: 16px;
+          color: #777;
+          margin-bottom: 20px;
+        }
+      
+        .course-meta {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 14px;
+          color: #777;
+        }
+      
+        .course-rating {
+          display: flex;
+          align-items: center;
+        }
+      
+        .star {
+          color: #f1c40f;
+          margin-right: 5px;
+        }
+      
+        footer {
+          background-color: #333;
+          color: var(--white);
+          padding: 40px 0;
+          text-align: center;
+        }
+      
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      
+        .animate-fadeInUp {
+          animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+<body>
+    <header>
+      <nav class="container">
+        <div class="logo">Holistic Learning Hub</div>
+        <ul class="nav-links">
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#web-dev-courses">All Courses</a></li>
+          <li><a href="#web-dev-courses">Web Development</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+  
+    <main>
+      <section id="hero" class="hero">
+        <div class="container">
+          <h1>Master Web Development</h1>
+          <p>Build stunning websites and web applications with our comprehensive courses</p>
+          <a href="#web-dev-courses" class="btn">Explore Courses</a>
+        </div>
+      </section>
+  
+      <section id="web-dev-courses" class="container">
+        <h2 class="section-title">Web Development Courses</h2>
+        <div class="courses">
+          <div class="course animate-fadeInUp">
+            <img src="./img/istockphoto-1408445036-1024x1024.jpg" alt="HTML and CSS Fundamentals course" class="course-image" width="300" height="200">
+            <div class="course-content">
+              <h3 class="course-title">HTML & CSS Fundamentals</h3>
+              <p class="course-description">Learn the building blocks of web development and create your first website</p>
+              <div class="course-meta">
+                <span>Beginner</span>
+                <div class="course-rating">
+                  <span class="star">★</span>
+                  <span>4.8 (2,345 reviews)</span>
+                </div>
+              </div>
+              <a href="./html.html" class="btn">Learn More</a>
+            </div>
+          </div>
+          <div class="course animate-fadeInUp">
+            <img src="./img/java-script-logoon-dark-wood-background-7yyxqxekizvuj4vg.jpg" alt="JavaScript Essentials course" class="course-image" width="300" height="200">
+            <div class="course-content">
+              <h3 class="course-title">JavaScript Essentials</h3>
+              <p class="course-description">Master the language of the web and add interactivity to your websites</p>
+              <div class="course-meta">
+                <span>Intermediate</span>
+                <div class="course-rating">
+                  <span class="star">★</span>
+                  <span>4.9 (1,876 reviews)</span>
+                </div>
+              </div>
+              <a href="./javascript.html" class="btn">Learn More</a>
+            </div>
+          </div>
+          <div class="course animate-fadeInUp">
+            <img src="./img/pngtree-d-render-of-a-responsive-web-design-in-a-blue-studio-image_3846389.jpg" alt="Responsive Web Design course" class="course-image" width="300" height="200">
+            <div class="course-content">
+              <h3 class="course-title">Responsive Web Design</h3>
+              <p class="course-description">Create websites that look great on any device using modern CSS techniques</p>
+              <div class="course-meta">
+                <span>Intermediate</span>
+                <div class="course-rating">
+                  <span class="star">★</span>
+                  <span>4.7 (1,523 reviews)</span>
+                </div>
+              </div>
+              <a href="./responsive.html" class="btn">Learn More</a>
+            </div>
+          </div>
+          <div class="course animate-fadeInUp">
+            <img src="./img/wp2465926-javascript-wallpapers.jpg" alt="React Fundamentals course" class="course-image" width="300" height="200">
+            <div class="course-content">
+              <h3 class="course-title">React Fundamentals</h3>
+              <p class="course-description">Build modern, interactive user interfaces with the popular React library</p>
+              <div class="course-meta">
+                <span>Advanced</span>
+                <div class="course-rating">
+                  <span class="star">★</span>
+                  <span>4.9 (2,103 reviews)</span>
+                </div>
+              </div>
+              <a href="./react.html" class="btn">Learn More</a>
+            </div>
+          </div>
+          <div class="course animate-fadeInUp">
+            <img src="./img/wp5070716-computer-code-javascript-wallpapers.jpg" alt="Node.js, Express & MongoDB course" class="course-image" width="300" height="200">
+            <div class="course-content">
+              <h3 class="course-title">Node.js, Express & MongoDB</h3>
+              <p class="course-description">Learn server-side JavaScript and build full-stack web applications</p>
+              <div class="course-meta">
+                <span>Advanced</span>
+                <div class="course-rating">
+                  <span class="star">★</span>
+                  <span>4.8 (1,765 reviews)</span>
+                </div>
+              </div>
+              <a href="./node.html" class="btn">Learn More</a>
+            </div>
+          </div>
+          <div class="course animate-fadeInUp">
+            <img src="./img/website-performance-optimization.png" alt="Web Performance Optimization course" class="course-image" width="300" height="200">
+            <div class="course-content">
+              <h3 class="course-title">Web Performance Optimization</h3>
+              <p class="course-description">Optimize your websites for speed and efficiency across all devices</p>
+              <div class="course-meta">
+                <span>Advanced</span>
+                <div class="course-rating">
+                  <span class="star">★</span>
+                  <span>4.7 (982 reviews)</span>
+                </div>
+              </div>
+              <a href="./webopt.html" class="btn">Learn More</a>
+            </div>
+          </div>
+        </div>
+      </section>
+  
+      <section id="faq" class="container">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <div class="faq-list">
+          <div class="faq-item animate-fadeInUp">
+            <h3>What prerequisites do I need for these courses?</h3>
+            <p>For beginner courses, no prior experience is required. For intermediate and advanced courses, basic knowledge of HTML, CSS, and JavaScript is recommended.</p>
+          </div>
+          <div class="faq-item animate-fadeInUp">
+            <h3>How long do I have access to the course materials?</h3>
+            <p>Once enrolled, you have lifetime access to all course materials, including future updates.</p>
+          </div>
+          <div class="faq-item animate-fadeInUp">
+            <h3>Is there a certificate upon completion?</h3>
+            <p>Yes, you'll receive a certificate of completion for each course you finish, which you can add to your portfolio or resume.</p>
+          </div>
+        </div>
+      </section>
+  
+      <section id="contact" class="container">
+        <h2 class="section-title">Get in Touch</h2>
+        <div class="animate-fadeInUp">
+          <p>Have questions about our Web Development courses? We're here to help!</p>
+          <a href="./contacto.html" class="btn">Contact Us</a>
+        </div>
+      </section>
+    </main>
+  
+    <footer>
+      <div class="container">
+        <p>&copy; 2023 Holistic Learning Hub. All rights reserved.</p>
+      </div>
+    </footer>
+  
+    <script>
+      document.addEventListener('DOMContentLoaded', (event) => {
+        const animateOnScroll = (entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('animate-fadeInUp');
+              observer.unobserve(entry.target);
+            }
+          });
+        };
+  
+        const observer = new IntersectionObserver(animateOnScroll, {
+          root: null,
+          threshold: 0.1
+        });
+  
+        document.querySelectorAll('.animate-fadeInUp').forEach(el => {
+          observer.observe(el);
+        });
+      });
+  
+      // Smooth scrolling for navigation links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+  
+          document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

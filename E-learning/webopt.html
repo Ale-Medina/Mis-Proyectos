@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Performance Optimization</title>
+    <link rel="shortcut icon" href="./img/icons8-código-fuente-64.png" type="image/x-icon">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+      
+        :root {
+          --primary-color: #2c3e50;
+          --secondary-color: #3498db;
+          --accent-color: #e74c3c;
+          --text-color: #333;
+          --bg-color: #ecf0f1;
+          --white: #ffffff;
+        }
+      
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+      
+        body {
+          font-family: 'Roboto', sans-serif;
+          line-height: 1.6;
+          color: var(--text-color);
+          background-color: var(--bg-color);
+        }
+      
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 20px;
+        }
+      
+        header {
+          background-color: var(--primary-color);
+          color: var(--white);
+          padding: 20px 0;
+          position: fixed;
+          width: 100%;
+          top: 0;
+          z-index: 1000;
+        }
+      
+        nav {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+      
+        .logo {
+          font-size: 24px;
+          font-weight: 700;
+        }
+      
+        .nav-links {
+          display: flex;
+          gap: 20px;
+          list-style: none;
+        }
+      
+        .nav-links a {
+          color: var(--white);
+          text-decoration: none;
+          font-weight: 500;
+          transition: color 0.3s ease;
+        }
+      
+        .nav-links a:hover {
+          color: var(--secondary-color);
+        }
+      
+        main {
+          margin-top: 80px;
+        }
+      
+        .hero {
+          background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('./img/1__L4PsCyrhhSIXSL0XsiYew.png') no-repeat center center;
+          background-size: cover;
+          color: var(--white);
+          text-align: center;
+          padding: 100px 0;
+        }
+      
+        .hero h1 {
+          font-size: 48px;
+          margin-bottom: 20px;
+        }
+      
+        .hero p {
+          font-size: 20px;
+          max-width: 600px;
+          margin: 0 auto 30px;
+        }
+      
+        .btn {
+          display: inline-block;
+          background-color: var(--secondary-color);
+          color: var(--white);
+          padding: 12px 24px;
+          border-radius: 5px;
+          text-decoration: none;
+          font-weight: 600;
+          transition: background-color 0.3s ease;
+        }
+      
+        .btn:hover {
+          background-color: #2980b9;
+        }
+      
+        .section {
+          padding: 80px 0;
+        }
+      
+        .section-title {
+          text-align: center;
+          font-size: 36px;
+          margin-bottom: 40px;
+        }
+      
+        .course-info {
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 30px;
+        }
+      
+        .course-details, .course-curriculum {
+          flex: 1;
+          min-width: 300px;
+        }
+      
+        .course-details h3, .course-curriculum h3 {
+          font-size: 24px;
+          margin-bottom: 20px;
+        }
+      
+        .course-details ul, .course-curriculum ul {
+          list-style-type: none;
+        }
+      
+        .course-details li, .course-curriculum li {
+          margin-bottom: 10px;
+        }
+      
+        .course-curriculum li {
+          display: flex;
+          align-items: center;
+        }
+      
+        .module-icon {
+          margin-right: 10px;
+          color: var(--secondary-color);
+        }
+      
+        .tools-section {
+          background-color: var(--white);
+          padding: 60px 0;
+        }
+      
+        .tools-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 30px;
+          justify-items: center;
+        }
+      
+        .tool-card {
+          text-align: center;
+          padding: 20px;
+          background-color: var(--bg-color);
+          border-radius: 10px;
+          transition: transform 0.3s ease;
+        }
+      
+        .tool-card:hover {
+          transform: translateY(-5px);
+        }
+      
+        .tool-icon {
+          font-size: 48px;
+          margin-bottom: 15px;
+          color: var(--secondary-color);
+        }
+      
+        footer {
+          background-color: var(--primary-color);
+          color: var(--white);
+          text-align: center;
+          padding: 20px 0;
+        }
+      
+        @media (max-width: 768px) {
+          .course-info {
+            flex-direction: column;
+          }
+        }
+    </style>
+</head>
+<body>
+    <header>
+      <nav class="container">
+        <div class="logo">Holistic Learning Hub</div>
+        <ul class="nav-links">
+          <li><a href="./inicio.html">Home</a></li>
+          <li><a href="./inicio.html">Courses</a></li>
+          <li><a href="#curriculum">Curriculum</a></li>
+          <li><a href="#tools">Tools</a></li>
+        </ul>
+      </nav>
+    </header>
+  
+    <main>
+      <section class="hero">
+        <div class="container">
+          <h1>Web Performance Optimization</h1>
+          <p>Master the art of creating lightning-fast websites and applications</p>
+          <a href="#enroll" class="btn">Enroll Now</a>
+        </div>
+      </section>
+  
+      <section class="section">
+        <div class="container">
+          <h2 class="section-title">Course Overview</h2>
+          <div class="course-info">
+            <div class="course-details">
+              <h3>What You'll Learn</h3>
+              <ul>
+                <li><i class="fas fa-check"></i> Understand web performance metrics and tools</li>
+                <li><i class="fas fa-check"></i> Optimize images and multimedia content</li>
+                <li><i class="fas fa-check"></i> Implement efficient caching strategies</li>
+                <li><i class="fas fa-check"></i> Minimize and optimize CSS and JavaScript</li>
+                <li><i class="fas fa-check"></i> Improve server response times</li>
+                <li><i class="fas fa-check"></i> Optimize for mobile devices</li>
+              </ul>
+            </div>
+            <div id="curriculum" class="course-curriculum">
+              <h3>Course Curriculum</h3>
+              <ul>
+                <li><i class="fas fa-book module-icon"></i> Module 1: Introduction to Web Performance</li>
+                <li><i class="fas fa-book module-icon"></i> Module 2: Performance Measurement Tools</li>
+                <li><i class="fas fa-book module-icon"></i> Module 3: Optimizing Images and Media</li>
+                <li><i class="fas fa-book module-icon"></i> Module 4: CSS and JavaScript Optimization</li>
+                <li><i class="fas fa-book module-icon"></i> Module 5: Caching Strategies</li>
+                <li><i class="fas fa-book module-icon"></i> Module 6: Server-side Optimization</li>
+                <li><i class="fas fa-book module-icon"></i> Module 7: Mobile Performance Optimization</li>
+                <li><i class="fas fa-book module-icon"></i> Module 8: Advanced Techniques and Future Trends</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+  
+      <section id="tools" class="tools-section">
+        <div class="container">
+          <h2 class="section-title">Tools You'll Master</h2>
+          <div class="tools-grid">
+            <div class="tool-card">
+              <i class="fas fa-tachometer-alt tool-icon"><img src="./img/icons8-page-speed-64.png" alt=""></i>
+              <h3>Google PageSpeed Insights</h3>
+            </div>
+            <div class="tool-card">
+              <i class="fas fa-bug tool-icon"><img src="./img/icons8-archivo-de-código-50.png" alt=""></i>
+              <h3>Chrome DevTools</h3>
+            </div>
+            <div class="tool-card">
+              <i class="fas fa-sitemap tool-icon"><img src="./img/icons8-optimization-64.png" alt=""></i>
+              <h3>WebPageTest</h3>
+            </div>
+            <div class="tool-card">
+              <i class="fas fa-compress-arrows-alt tool-icon"><img src="./img/icons8-optimization-65.png" alt=""></i>
+              <h3>Webpack</h3>
+            </div>
+            <div class="tool-card">
+              <i class="fas fa-server tool-icon"><img src="./img/icons8-optimization-64 (1).png" alt=""></i>
+              <h3>Nginx</h3>
+            </div>
+            <div class="tool-card">
+              <i class="fas fa-mobile-alt tool-icon"><img src="./img/icons8-optimization-64 (2).png" alt=""></i>
+              <h3>Lighthouse</h3>
+            </div>
+          </div>
+        </div>
+      </section>
+  
+      <section id="enroll" class="section">
+        <div class="container" style="text-align: center;">
+          <h2 class="section-title">Ready to Optimize Your Web Projects?</h2>
+          <p>Enroll now and start your journey to creating blazing-fast websites and applications!</p>
+          <a href="./contacto.html" class="btn">Enroll in This Course</a>
+        </div>
+      </section>
+    </main>
+  
+    <footer>
+      <div class="container">
+        <p>&copy; 2023 Holistic Learning Hub. All rights reserved.</p>
+      </div>
+    </footer>
+  
+    <script>
+      // Smooth scrolling for navigation links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+  
+          document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+          });
+        });
+      });
+  
+      // Simple animation for tool cards
+      const toolCards = document.querySelectorAll('.tool-card');
+      
+      const animateToolCards = (entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = 1;
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      };
+  
+      const toolObserver = new IntersectionObserver(animateToolCards, {
+        root: null,
+        threshold: 0.1
+      });
+  
+      toolCards.forEach(card => {
+        card.style.opacity = 0;
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        toolObserver.observe(card);
+      });
+    </script>
+  </body>
+</html>

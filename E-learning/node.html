@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node.js, Express & MongoDB</title>
+    <link rel="shortcut icon" href="./img/icons8-código-fuente-64.png" type="image/x-icon">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+      
+        :root {
+          --primary-color: #4a90e2;
+          --secondary-color: #27ae60;
+          --text-color: #333;
+          --bg-color: #f9f9f9;
+          --white: #ffffff;
+        }
+      
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+      
+        body {
+          font-family: 'Poppins', sans-serif;
+          line-height: 1.6;
+          color: var(--text-color);
+          background-color: var(--bg-color);
+        }
+      
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 20px;
+          text-align: center;
+        }
+      
+        header {
+          background-color: var(--white);
+          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+          position: fixed;
+          width: 100%;
+          top: 0;
+          z-index: 1000;
+        }
+      
+        nav {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 15px 0;
+        }
+      
+        .logo {
+          font-size: 24px;
+          font-weight: 700;
+          color: var(--primary-color);
+        }
+      
+        .nav-links {
+          display: flex;
+          gap: 20px;
+          list-style: none;
+        }
+      
+        .nav-links a {
+          color: var(--text-color);
+          text-decoration: none;
+          font-weight: 600;
+          transition: color 0.3s ease;
+        }
+      
+        .nav-links a:hover {
+          color: var(--primary-color);
+        }
+      
+        .hero {
+          background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('./img/node-tools.png') no-repeat center center;
+          background-size: cover;
+          color: var(--white);
+          text-align: center;
+          padding: 150px 0;
+          margin-top: 60px;
+        }
+      
+        .hero h1 {
+          font-size: 48px;
+          margin-bottom: 20px;
+        }
+      
+        .hero p {
+          font-size: 20px;
+          max-width: 600px;
+          margin: 0 auto 30px;
+        }
+      
+        .btn {
+          display: inline-block;
+          background-color: var(--secondary-color);
+          color: var(--white);
+          padding: 12px 24px;
+          border-radius: 5px;
+          text-decoration: none;
+          font-weight: 600;
+          transition: background-color 0.3s ease;
+        }
+      
+        .btn:hover {
+          background-color: #219653;
+        }
+      
+        .section-title {
+          text-align: center;
+          font-size: 36px;
+          margin: 60px 0 40px;
+        }
+      
+        .course-info {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 40px;
+        }
+      
+        .course-details, .course-curriculum {
+          flex-basis: 48%;
+        }
+      
+        .course-details h3, .course-curriculum h3 {
+          font-size: 24px;
+          margin-bottom: 20px;
+        }
+      
+        .course-details ul, .course-curriculum ul {
+          list-style-type: none;
+        }
+      
+        .course-details li, .course-curriculum li {
+          margin-bottom: 10px;
+        }
+      
+        .course-curriculum li {
+          display: flex;
+          align-items: center;
+        }
+      
+        .module-icon {
+          margin-right: 10px;
+          color: var(--secondary-color);
+        }
+      
+        .projects {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 30px;
+          margin-bottom: 60px;
+        }
+      
+        .project {
+          background-color: var(--white);
+          border-radius: 10px;
+          overflow: hidden;
+          box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+          transition: transform 0.3s ease;
+        }
+      
+        .project:hover {
+          transform: translateY(-5px);
+        }
+      
+        .project-image {
+          width: 100%;
+          height: 200px;
+          object-fit: cover;
+        }
+      
+        .project-content {
+          padding: 20px;
+        }
+      
+        .project-title {
+          font-size: 24px;
+          margin-bottom: 10px;
+        }
+      
+        .project-description {
+          font-size: 16px;
+          color: #777;
+          margin-bottom: 20px;
+        }
+      
+        footer {
+          background-color: #333;
+          color: var(--white);
+          padding: 40px 0;
+          text-align: center;
+        }
+      
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      
+        .animate-fadeInUp {
+          animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <header>
+      <nav class="container">
+        <div class="logo">Holistic Learning Hub</div>
+        <ul class="nav-links">
+          <li><a href="./inicio.html">Home</a></li>
+          <li><a href="#course-details">Course Details</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#instructor">Instructor</a></li>
+        </ul>
+      </nav>
+    </header>
+  
+    <main>
+      <section class="hero">
+        <div class="container">
+          <h1>Node.js, Express & MongoDB</h1>
+          <p>Master server-side JavaScript and build full-stack web applications</p>
+          <a href="#enroll" class="btn">Enroll Now</a>
+        </div>
+      </section>
+  
+      <section id="course-details" class="container">
+        <h2 class="section-title">Course Details</h2>
+        <div class="course-info">
+          <div class="course-details animate-fadeInUp">
+            <h3>What You'll Learn</h3>
+            <ul>
+              <li><i class="fas fa-check"></i> Build robust and scalable web applications with Node.js</li>
+              <li><i class="fas fa-check"></i> Create RESTful APIs using Express.js</li>
+              <li><i class="fas fa-check"></i> Work with MongoDB and Mongoose for database management</li>
+              <li><i class="fas fa-check"></i> Implement user authentication and authorization</li>
+              <li><i class="fas fa-check"></i> Deploy your applications to cloud platforms</li>
+            </ul>
+          </div>
+          <div class="course-curriculum animate-fadeInUp">
+            <h3>Course Curriculum</h3>
+            <ul>
+              <li><i class="fas fa-book module-icon"></i> Introduction to Node.js and npm</li>
+              <li><i class="fas fa-book module-icon"></i> Express.js fundamentals</li>
+              <li><i class="fas fa-book module-icon"></i> MongoDB and Mongoose essentials</li>
+              <li><i class="fas fa-book module-icon"></i> RESTful API development</li>
+              <li><i class="fas fa-book module-icon"></i> Authentication and authorization</li>
+              <li><i class="fas fa-book module-icon"></i> Error handling and logging</li>
+              <li><i class="fas fa-book module-icon"></i> Testing and debugging</li>
+              <li><i class="fas fa-book module-icon"></i> Deployment and scaling</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+  
+      <section id="projects" class="container">
+        <h2 class="section-title">Projects You'll Build</h2>
+        <div class="projects">
+          <div class="project animate-fadeInUp">
+            <img src="./img/pngtree-tiny-business-people-and-manager-at-tasks-and-goals-accomplishment-chart-image_1091427.jpg" alt="Blog API Project" class="project-image" width="300" height="200">
+            <div class="project-content">
+              <h3 class="project-title">Blog API</h3>
+              <p class="project-description">Create a RESTful API for a blog application with user authentication and CRUD operations.</p>
+            </div>
+          </div>
+          <div class="project animate-fadeInUp">
+            <img src="./img/API-Blog-Thumbnail@2x.png" alt="Task Manager Project" class="project-image" width="300" height="200">
+            <div class="project-content">
+              <h3 class="project-title">Task Manager</h3>
+              <p class="project-description">Build a full-stack task management application with real-time updates using Socket.io.</p>
+            </div>
+          </div>
+          <div class="project animate-fadeInUp">
+            <img src="./img/unity_Blog_post_illustration_API_in_e-commerce_v2.png" alt="E-commerce API Project" class="project-image" width="300" height="200">
+            <div class="project-content">
+              <h3 class="project-title">E-commerce API</h3>
+              <p class="project-description">Develop a scalable API for an e-commerce platform with product management and order processing.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+  
+      <section id="instructor" class="container">
+        <h2 class="section-title">Meet Your Instructor</h2>
+        <div class="instructor-profile animate-fadeInUp">
+          <img src="./img/woman-8024963_1280.jpg" alt="Instructor Jane Doe" width="200" height="200" style="border-radius: 50%; margin-bottom: 20px;">
+          <h3>Jane Doe</h3>
+          <p>Full-stack Developer & Node.js Expert</p>
+          <p>Jane has over 10 years of experience in web development and has worked with companies like Amazon and Netflix. She's passionate about teaching and has helped thousands of students master Node.js and full-stack development.</p>
+        </div>
+      </section>
+  
+      <section id="enroll" class="container">
+        <h2 class="section-title">Ready to Get Started?</h2>
+        <div class="enroll-cta animate-fadeInUp">
+          <p>Enroll now and start your journey to becoming a full-stack JavaScript developer!</p>
+          <a href="./contacto.html" class="btn">Enroll for $299</a>
+        </div>
+      </section>
+    </main>
+  
+    <footer>
+      <div class="container">
+        <p>&copy; 2023 Holistic Learning Hub. All rights reserved.</p>
+      </div>
+    </footer>
+  
+    <script>
+      document.addEventListener('DOMContentLoaded', (event) => {
+        const animateOnScroll = (entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('animate-fadeInUp');
+              observer.unobserve(entry.target);
+            }
+          });
+        };
+  
+        const observer = new IntersectionObserver(animateOnScroll, {
+          root: null,
+          threshold: 0.1
+        });
+  
+        document.querySelectorAll('.animate-fadeInUp').forEach(el => {
+          observer.observe(el);
+        });
+      });
+  
+      // Smooth scrolling for navigation links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+  
+          document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

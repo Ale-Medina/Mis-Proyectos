@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML & CSS Fundamentals</title>
+    <link rel="shortcut icon" href="./img/icons8-código-fuente-64.png" type="image/x-icon">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+    
+      :root {
+        --primary-color: #3498db;
+        --secondary-color: #2ecc71;
+        --text-color: #333;
+        --bg-color: #f4f4f4;
+        --white: #ffffff;
+      }
+    
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+    
+      body {
+        font-family: 'Roboto', sans-serif;
+        line-height: 1.6;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+      }
+    
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+    
+      header {
+        background-color: var(--white);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+      }
+    
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+        text-decoration: none;
+      }
+    
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+      }
+    
+      .nav-links {
+        display: flex;
+        gap: 1.5rem;
+        list-style: none;
+        font-weight: bold;
+      }
+    
+      .nav-links a {
+        color: var(--text-color);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+    
+      .nav-links a:hover {
+        color: var(--primary-color);
+      }
+    
+      .hero {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('./img/html-css\ fondo.jpg') no-repeat center center;
+        background-size: cover;
+        color: var(--white);
+        text-align: center;
+        padding: 8rem 0;
+        margin-top: 4rem;
+      }
+    
+      .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+    
+      .hero p {
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin: 0 auto 2rem;
+      }
+    
+      .btn {
+        display: inline-block;
+        background-color: var(--secondary-color);
+        color: var(--white);
+        padding: 0.8rem 1.5rem;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+      }
+    
+      .btn:hover {
+        background-color: #27ae60;
+      }
+    
+      .section {
+        padding: 4rem 0;
+      }
+    
+      .section-title {
+        font-size: 2.5rem;
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      #enroll{
+        text-align: center;
+
+      }
+      
+      .instructor-profile{
+        display: flex;
+        flex-direction: column;
+        justify-content:center;
+        align-items: center;
+        text-align: center;
+      }
+      .instructor-profile img{
+        border-radius: 50%;
+      }
+    
+      .course-details {
+        background-color: var(--white);
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      }
+    
+      .course-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+      }
+    
+      .info-item {
+        text-align: center;
+      }
+    
+      .info-item i {
+        font-size: 2rem;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+      }
+    
+      .curriculum {
+        margin-top: 3rem;
+      }
+    
+      .module {
+        background-color: var(--white);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        overflow: hidden;
+      }
+    
+      .module-header {
+        background-color: var(--primary-color);
+        color: var(--white);
+        padding: 1rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    
+      .module-content {
+        padding: 1rem;
+        display: none;
+      }
+    
+      .module-content.active {
+        display: block;
+      }
+    
+      .lesson {
+        margin-bottom: 0.5rem;
+      }
+    
+      .lesson i {
+        margin-right: 0.5rem;
+        color: var(--secondary-color);
+      }
+    
+      footer {
+        background-color: #333;
+        color: var(--white);
+        text-align: center;
+        padding: 2rem 0;
+      }
+    
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+    
+      .animate-fadeIn {
+        animation: fadeIn 1s ease-out;
+      }
+    </style>
+</head>
+<body>
+  <header>
+    <nav class="container">
+      <div class="logo">Holistic Learning Hub</div>
+      <ul class="nav-links">
+        <li><a href="./inicio.html">Home</a></li>
+        <li><a href="./inicio.html">Courses</a></li>
+        <li><a href="#curriculum">Curriculum</a></li>
+        <li><a href="#instructor">Instructor</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>HTML & CSS Fundamentals</h1>
+        <p>Master the building blocks of web development and create your first website</p>
+        <a href="#enroll" class="btn">Enroll Now</a>
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="course-details animate-fadeIn">
+        <h2 class="section-title">Course Overview</h2>
+        <div class="course-info">
+          <div class="info-item">
+            <i class="fas fa-clock"></i>
+            <p>Duration</p>
+            <p>6 weeks</p>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-user-graduate"></i>
+            <p>Level</p>
+            <p>Beginner</p>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-video"></i>
+            <p>Lessons</p>
+            <p>30+ video lessons</p>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-certificate"></i>
+            <p>Certificate</p>
+            <p>Upon completion</p>
+          </div>
+        </div>
+        <p>This comprehensive course will take you from a complete beginner to creating your own responsive websites using HTML and CSS. You'll learn the fundamental concepts, best practices, and modern techniques used by professional web developers.</p>
+      </div>
+    </section>
+
+    <section id="curriculum" class="section container">
+      <h2 class="section-title">Course Curriculum</h2>
+      <div class="curriculum animate-fadeIn">
+        <div class="module">
+          <div class="module-header">
+            <h3>Module 1: Introduction to HTML</h3>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="module-content">
+            <div class="lesson"><i class="fas fa-play-circle"></i>What is HTML?</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>Setting up your development environment</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>Creating your first HTML page</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>HTML document structure</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>Working with text elements</div>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module-header">
+            <h3>Module 2: HTML Elements and Attributes</h3>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="module-content">
+            <div class="lesson"><i class="fas fa-play-circle"></i>Links and navigation</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>Images and multimedia</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>Lists and tables</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>Forms and input elements</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>Semantic HTML5 elements</div>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module-header">
+            <h3>Module 3: Introduction to CSS</h3>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="module-content">
+            <div class="lesson"><i class="fas fa-play-circle"></i>What is CSS?</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>CSS syntax and selectors</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>Colors and backgrounds</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>Box model and layout basics</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>Typography and text styling</div>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module-header">
+            <h3>Module 4: CSS Layout Techniques</h3>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="module-content">
+            <div class="lesson"><i class="fas fa-play-circle"></i>Floats and clearing</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>Positioning elements</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>Flexbox layout</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>CSS Grid layout</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>Responsive design basics</div>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module-header">
+            <h3>Module 5: CSS Styling Techniques</h3>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="module-content">
+            <div class="lesson"><i class="fas fa-play-circle"></i>Working with images in CSS</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>CSS transitions and animations</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>Styling forms and buttons</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>CSS preprocessors: Introduction to Sass</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>CSS best practices and organization</div>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module-header">
+            <h3>Module 6: Final Project</h3>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="module-content">
+            <div class="lesson"><i class="fas fa-play-circle"></i>Planning your website</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>Creating the HTML structure</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>Styling with CSS</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>Making it responsive</div>
+            <div class="lesson"><i class="fas fa-play-circle"></i>Testing and deployment</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="instructor" class="section container animate-fadeIn">
+      <h2 class="section-title">Meet Your Instructor</h2>
+      <div class="instructor-profile">
+        <img src="./img/woman-3303529_1280.jpg" alt="Sarah Johnson, Web Development Instructor" width="200" height="200" no-repeact center center cover >
+        <h3>Sarah Johnson</h3>
+        <p>Sarah is a seasoned web developer with over 10 years of experience in creating beautiful, responsive websites. She's passionate about teaching and has helped thousands of students start their journey in web development.</p>
+      </div>
+    </section>
+
+    <section id="enroll" class="section container animate-fadeIn">
+      <h2 class="section-title">Ready to Get Started?</h2>
+      <p>Enroll now and begin your journey to becoming a proficient web developer!</p>
+      <a href="./contacto.html" class="btn">Enroll for $99</a>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2023 Holistic Learning Hub. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      const moduleHeaders = document.querySelectorAll('.module-header');
+      
+      moduleHeaders.forEach(header => {
+        header.addEventListener('click', () => {
+          const content = header.nextElementSibling;
+          content.classList.toggle('active');
+          
+          const icon = header.querySelector('i');
+          icon.classList.toggle('fa-chevron-down');
+          icon.classList.toggle('fa-chevron-up');
+        });
+      });
+
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+      };
+
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fadeIn');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      const animatedElements = document.querySelectorAll('.animate-fadeIn');
+      animatedElements.forEach(el => observer.observe(el));
+    });
+  </script>
+</body>
+</html>
