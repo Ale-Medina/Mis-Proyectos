@@ -1,0 +1,313 @@
+// Organizador Familiar - esquema de datos
+// Por defecto usa SQLite (archivo local, persistente en disco del servidor).
+// Para producción con múltiples instancias/serverless, cambiar "provider" a
+// "postgresql" y DATABASE_URL a una base Postgres (ej. Supabase, Neon, Railway).
+// Ver README.md sección "Base de datos y despliegue".
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Personas y sesión
+// ---------------------------------------------------------------------------
+
+model Person {
+  id        String   @id @default(cuid())
+  name      String   @unique // "Helu" | "Ale"
+  pinHash   String
+  colorHex  String   @default("#6B7280")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tasksAssigned       TaskInstance[]        @relation("AssignedPerson")
+  templatesAnchored    TaskTemplate[]        @relation("RotationAnchorPerson")
+  tasksCompletedBy     TaskInstance[]        @relation("CompletedByPerson")
+  weeklyPlanItems      WeeklyPlanItem[]
+  dailyLogs            DailyLog[]
+  bathLogs             BathLog[]
+  nightLogsAttended    NightLog[]            @relation("AttendedBy")
+  compensatoryRestLogs CompensatoryRestLog[]
+  workBlockAssignments WeekdayResponsibility[]
+  mealLogs             MealLog[]
+}
+
+// ---------------------------------------------------------------------------
+// Configuración general del sistema (fila única)
+// ---------------------------------------------------------------------------
+
+model Settings {
+  id                 Int      @id @default(1)
+  timezone           String   @default("America/Argentina/Cordoba")
+  systemStartDate    DateTime // fecha de inicio del sistema / ancla de rotaciones
+  defaultWakeTime    String   @default("07:00") // HH:mm, usado si no hay registro diario
+  trialPeriodWeeks   Int      @default(3)
+  updatedAt          DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// Categorías de tareas (agrupan para el balance A-E)
+// ---------------------------------------------------------------------------
+
+enum BalanceGroup {
+  WORK       // A. Trabajo remunerado y protegido
+  HOUSEHOLD  // B. Tareas domésticas
+  CHILDCARE  // C. Cuidado activo de la nena
+  NIGHT      // D. Disponibilidad nocturna
+  PERSONAL   // E. Tiempo personal y descanso
+}
+
+model Category {
+  id           String       @id @default(cuid())
+  name         String       @unique
+  balanceGroup BalanceGroup
+  colorKey     String       @default("slate")
+  sortOrder    Int          @default(0)
+
+  templates TaskTemplate[]
+}
+
+// ---------------------------------------------------------------------------
+// Plantillas de tareas (recurrentes o únicas) - editables sin tocar código
+// ---------------------------------------------------------------------------
+
+enum Frequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+  ONCE
+}
+
+enum ScheduleType {
+  FIXED_TIME        // horario fijo (ej. gimnasia 18:00-19:00)
+  ORIENTATIVE_TIME  // hora orientativa (ej. almuerzo ~12:00)
+  TARGET_DATE       // fecha objetivo puntual
+  FLEXIBLE_WINDOW    // ventana flexible (quincenal/mensual)
+}
+
+enum RotationMode {
+  NONE                   // no rota, se asigna manualmente cada vez
+  FIXED                  // siempre la misma persona (rotationAnchorPersonId)
+  DAILY_ALTERNATE        // alterna cada día desde rotationAnchorDate
+  WEEKLY_ALTERNATE        // alterna cada semana (Semana A/B) desde rotationAnchorDate
+  MONTHLY_ALTERNATE       // alterna cada mes
+  MONTHLY_SPLIT_ALTERNATE // 2 ocurrencias/mes, una para cada persona; el orden se alterna por mes
+}
+
+model TaskTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  description String   @default("")
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+
+  frequency        Frequency
+  daysOfWeek       String?      // CSV de 0-6 (0=domingo) para DAILY/WEEKLY con días específicos. null = todos los días (DAILY) o cualquier día (WEEKLY libre)
+  occurrencesPerMonth Int       @default(1) // para MONTHLY: 1 o 2
+
+  scheduleType     ScheduleType @default(ORIENTATIVE_TIME)
+  orientativeTime  String?      // "HH:mm"
+
+  durationMinutes  Int
+
+  rotationMode         RotationMode @default(NONE)
+  rotationAnchorDate   DateTime?
+  rotationAnchorPersonId String?
+  rotationAnchorPerson  Person?    @relation("RotationAnchorPerson", fields: [rotationAnchorPersonId], references: [id])
+
+  isShared   Boolean  @default(false) // tarea conjunta (no de un solo responsable)
+  active     Boolean  @default(true)
+  isCore     Boolean  @default(false) // tareas de cuidado/base que no se listan como "quehacer" suelto
+
+  subtasks   Json     @default("[]") // array de strings, orden de aparición
+
+  sortOrder  Int      @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  instances TaskInstance[]
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  DONE
+  RESCHEDULED
+}
+
+model TaskInstance {
+  id         String   @id @default(cuid())
+  templateId String
+  template   TaskTemplate @relation(fields: [templateId], references: [id])
+
+  date        DateTime // fecha de referencia de la instancia (día)
+  windowStart DateTime? // para ventanas flexibles (quincenal/mensual)
+  windowEnd   DateTime?
+
+  assignedPersonId String?
+  assignedPerson   Person? @relation("AssignedPerson", fields: [assignedPersonId], references: [id])
+
+  status      TaskStatus @default(PENDING)
+  completedAt DateTime?
+  completedByPersonId String?
+  completedByPerson   Person? @relation("CompletedByPerson", fields: [completedByPersonId], references: [id])
+  actualMinutes Int?
+  notes         String?
+
+  subtaskState Json @default("[]") // [{ name, done }]
+
+  rescheduledDate DateTime? // si se reprogramó, nueva fecha objetivo
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([templateId, date])
+  @@index([date])
+  @@index([assignedPersonId])
+}
+
+// ---------------------------------------------------------------------------
+// Bloques de trabajo / almuerzo semanales (editable, no hardcodeado en UI)
+// ---------------------------------------------------------------------------
+
+enum WeekdayResponsibilityKind {
+  WORK_BLOCK
+  LUNCH
+}
+
+model WeekdayResponsibility {
+  id       String                     @id @default(cuid())
+  kind     WeekdayResponsibilityKind
+  dayOfWeek Int                       // 0=domingo ... 6=sábado
+  personId String?
+  person   Person?                    @relation(fields: [personId], references: [id])
+
+  @@unique([kind, dayOfWeek])
+}
+
+// ---------------------------------------------------------------------------
+// Registro diario (hora en que se despierta la nena) -> determina bloque de
+// trabajo protegido y referencia de almuerzo/siesta de ese día
+// ---------------------------------------------------------------------------
+
+model DailyLog {
+  id       String   @id @default(cuid())
+  date     DateTime @unique
+  wakeTime String   // "HH:mm"
+  notes    String?
+  loggedById String?
+  loggedBy   Person? @relation(fields: [loggedById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// Baño de la nena (registro informativo, no genera tareas atrasadas)
+// ---------------------------------------------------------------------------
+
+model BathLog {
+  id       String   @id @default(cuid())
+  date     DateTime
+  personId String
+  person   Person   @relation(fields: [personId], references: [id])
+  notes    String?
+  createdAt DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// Registro nocturno
+// ---------------------------------------------------------------------------
+
+enum RestQuality {
+  GOOD
+  REGULAR
+  BAD
+}
+
+model NightLog {
+  id    String   @id @default(cuid())
+  date  DateTime @unique // noche correspondiente a esa fecha (noche de date -> date+1)
+
+  restHelu RestQuality?
+  restAle  RestQuality?
+  wakeupsCount Int?
+  attendedById String?
+  attendedBy   Person? @relation("AttendedBy", fields: [attendedById], references: [id])
+  longFeeding  Boolean?
+  morningRecoveryNotes String?
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// Descanso compensatorio (Ale a cargo para que Helu descanse)
+// ---------------------------------------------------------------------------
+
+model CompensatoryRestLog {
+  id       String   @id @default(cuid())
+  date     DateTime
+  startTime String?
+  endTime   String?
+  careMinutesByAle Int?
+  restMinutesForHelu Int?
+  notes String?
+  createdById String
+  createdBy   Person @relation(fields: [createdById], references: [id])
+  createdAt DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// Comidas informales (sin responsable fijo) - solo para registrar limpieza
+// ---------------------------------------------------------------------------
+
+model MealLog {
+  id       String   @id @default(cuid())
+  date     DateTime
+  personId String
+  person   Person   @relation(fields: [personId], references: [id])
+  description String?
+  cleanedUp Boolean @default(true)
+  createdAt DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// Planificación laboral semanal (domingos)
+// ---------------------------------------------------------------------------
+
+enum WorkItemType {
+  URGENT
+  IMPORTANT
+  DEVELOPMENT
+}
+
+enum WorkItemStatus {
+  PENDING
+  IN_PROGRESS
+  DONE
+}
+
+model WeeklyPlanItem {
+  id           String   @id @default(cuid())
+  weekStartDate DateTime // lunes de la semana planificada
+  title        String
+  type         WorkItemType
+  responsibleId String?
+  responsible   Person? @relation(fields: [responsibleId], references: [id])
+  dueDate      DateTime?
+  status       WorkItemStatus @default(PENDING)
+  notes        String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([weekStartDate])
+}
