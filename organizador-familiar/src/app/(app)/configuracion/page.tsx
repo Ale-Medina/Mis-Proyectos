@@ -48,35 +48,6 @@ function WeekdayTable({ kind, title }: { kind: "WORK_BLOCK" | "LUNCH"; title: st
   );
 }
 
-function ChangePinForm() {
-  const [current, setCurrent] = useState("");
-  const [next, setNext] = useState("");
-  const [msg, setMsg] = useState<string | null>(null);
-
-  async function submit() {
-    setMsg(null);
-    try {
-      await apiSend("/api/auth/change-pin", "POST", { currentPin: current, newPin: next });
-      setMsg("PIN actualizado.");
-      setCurrent("");
-      setNext("");
-    } catch (e) {
-      setMsg(e instanceof Error ? e.message : "Error");
-    }
-  }
-
-  return (
-    <div className="surface px-4 py-3 flex flex-col gap-2">
-      <input type="password" inputMode="numeric" placeholder="PIN actual" value={current} onChange={(e) => setCurrent(e.target.value)} className="surface px-2 py-1.5 text-sm" />
-      <input type="password" inputMode="numeric" placeholder="PIN nuevo (4-12 caracteres)" value={next} onChange={(e) => setNext(e.target.value)} className="surface px-2 py-1.5 text-sm" />
-      <button onClick={submit} className="self-start text-xs font-semibold px-3 py-1.5 rounded-full text-white" style={{ backgroundColor: "var(--accent)" }}>
-        Cambiar PIN
-      </button>
-      {msg && <p className="text-xs" style={{ color: "var(--muted)" }}>{msg}</p>}
-    </div>
-  );
-}
-
 function GeneralSettingsForm() {
   const { data, mutate } = useSWR<{ settings: { systemStartDate: string; defaultWakeTime: string; trialPeriodWeeks: number } }>(
     "/api/settings",
@@ -172,8 +143,7 @@ export default function ConfiguracionPage() {
       </p>
 
       <Section title="Tu cuenta">
-        <div className="surface px-4 py-3 text-sm mb-1">Sesión activa: <strong>{me?.name}</strong></div>
-        <ChangePinForm />
+        <div className="surface px-4 py-3 text-sm">Sesión activa: <strong>{me?.name}</strong></div>
       </Section>
 
       <Section title="General">

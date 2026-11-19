@@ -14,9 +14,10 @@ hora 24h. Idioma: español.
   Tareas del hogar, Trabajo, Cuidado de nuestra hija, Noches, Balance,
   Historial, Configuración. Responsive, con barra inferior en celular y
   barra lateral en pantallas grandes.
-- **Autenticación real de dos perfiles** (Helu / Ale) con PIN, sesión por
-  cookie firmada (JWT, `jose`) y PIN hasheado (`bcrypt`). Cada quien entra
-  desde su propio dispositivo.
+- **Perfiles reales de Helu y Ale** con sesión por cookie firmada (JWT,
+  `jose`): se elige el nombre y se entra directo, sin PIN (app privada de
+  uso familiar, pensada para que sea rápido desde el celular). Cada quien
+  entra desde su propio dispositivo.
 - **Persistencia real en base de datos** (Prisma + Postgres vía
   `DATABASE_URL`). Nada se guarda solo en memoria ni solo en el navegador.
 - **Sincronización entre dispositivos**: todos los datos viven en el
@@ -46,8 +47,7 @@ hora 24h. Idioma: español.
   administración del hogar, gimnasia, baño de la nena, CrossFit, etc.
 - **Configuración 100% editable sin tocar código**: en `/configuracion` se
   pueden crear tareas y categorías nuevas, cambiar responsables,
-  frecuencias, duraciones, horarios, días de la semana de trabajo/almuerzo,
-  y el propio PIN.
+  frecuencias, duraciones, horarios y días de la semana de trabajo/almuerzo.
 - **Balance de responsabilidades** separado en las 5 categorías pedidas
   (A. Trabajo, B. Doméstico, C. Cuidado activo, D. Disponibilidad nocturna,
   E. Personal), con minutos estimados vs. reales, por semana o por mes, sin
@@ -95,9 +95,9 @@ hora 24h. Idioma: español.
   `src/lib/dates.ts`): las plantillas (`TaskTemplate`) generan instancias
   (`TaskInstance`) de forma perezosa cuando se consulta un rango de fechas,
   siempre en zona horaria Argentina, sin importar dónde corra el servidor.
-- **Autenticación** simple a propósito (2 perfiles fijos + PIN), pensada
-  para una app familiar privada, no para registro público. El PIN se
-  cambia desde `/configuracion`.
+- **Autenticación** mínima a propósito (2 perfiles fijos, sin PIN ni
+  contraseña): se elige el nombre y se entra. Pensada para una app
+  familiar privada en dispositivos propios, no para registro público.
 
 ## 3. Correr la aplicación localmente
 
@@ -120,8 +120,8 @@ npm run db:seed             # carga personas, categorías y tareas iniciales
 npm run dev                 # http://localhost:3000
 ```
 
-Perfiles de fábrica: **Helu** y **Ale**, ambos con PIN **1234**. Cambiá el
-PIN de cada uno apenas entres (Configuración → Tu cuenta).
+Perfiles de fábrica: **Helu** y **Ale**. Se entra tocando el nombre, sin
+PIN ni contraseña.
 
 Para producción local:
 
@@ -170,12 +170,13 @@ También funciona en cualquier servicio que corra `npm run build` /
 misma `DATABASE_URL` de Postgres y agregando `SESSION_SECRET`. No hace
 falta disco persistente porque los datos ya no viven en un archivo local.
 
-No usé Supabase Auth/Realtime a propósito: con 2 usuarios fijos, un login
-por PIN propio y *polling* cada 20s son más simples de mantener y no
-dependen de configurar un proveedor externo adicional — pero si en el
-futuro quisieran sincronización instantánea o invitar más perfiles, migrar
-a Supabase (Auth + Realtime) sobre este mismo esquema de Postgres es
-sencillo, porque el modelo de datos ya es relacional estándar.
+No usé Supabase Auth/Realtime a propósito: con 2 usuarios fijos y sin PIN,
+el login es elegir el nombre y entrar; *polling* cada 20s es suficiente
+para sincronizar y no depende de configurar un proveedor externo
+adicional — pero si en el futuro quisieran invitar más perfiles o
+requerir alguna verificación, migrar a Supabase (Auth + Realtime) sobre
+este mismo esquema de Postgres es sencillo, porque el modelo de datos ya
+es relacional estándar.
 
 ## 5. Cómo "invitar" al segundo usuario
 
@@ -184,8 +185,7 @@ ya existen desde el primer `npm run db:seed`. Para habilitar a la segunda
 persona:
 
 1. Compartile la URL pública de la app (la de Render/Vercel/etc.).
-2. Que entre a `/login`, elija su nombre y use el PIN de fábrica `1234`.
-3. Que lo cambie enseguida desde Configuración → Tu cuenta.
+2. Que entre a `/login` y toque su nombre — no hay PIN ni contraseña.
 
 Si quisieran cambiar los nombres "Helu"/"Ale" por otros, se edita
 directamente en `prisma/seed.ts` (campo `name`) antes de correr el seed, o

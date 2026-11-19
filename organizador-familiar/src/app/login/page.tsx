@@ -17,10 +17,8 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [persons, setPersons] = useState<Person[]>([]);
-  const [selected, setSelected] = useState<Person | null>(null);
-  const [pin, setPin] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loadingId, setLoadingId] = useState<string | null>(null);
 
   useEffect(() => {
     apiGet<{ persons: Person[] }>("/api/auth/profiles")
@@ -28,20 +26,17 @@ function LoginForm() {
       .catch(() => setError("No se pudo conectar con el servidor."));
   }, []);
 
-  async function submit() {
-    if (!selected) return;
-    setLoading(true);
+  async function enter(person: Person) {
+    setLoadingId(person.id);
     setError(null);
     try {
-      await apiSend("/api/auth/login", "POST", { personId: selected.id, pin });
+      await apiSend("/api/auth/login", "POST", { personId: person.id });
       const next = searchParams.get("next") || "/dia";
       router.push(next);
       router.refresh();
     } catch (e) {
       setError(e instanceof Error ? e.message : "No se pudo iniciar sesión");
-      setPin("");
-    } finally {
-      setLoading(false);
+      setLoadingId(null);
     }
   }
 
@@ -54,91 +49,40 @@ function LoginForm() {
         </p>
       </div>
 
-      {!selected ? (
-        <div className="w-full max-w-xs flex flex-col gap-3">
-          <p className="text-center text-sm font-medium" style={{ color: "var(--muted)" }}>
-            ¿Quién sos?
-          </p>
-          {persons.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => setSelected(p)}
-              className="surface flex items-center gap-3 px-5 py-4 text-left transition active:scale-[0.98]"
-            >
-              <span
-                className="h-10 w-10 rounded-full flex items-center justify-center text-white font-bold"
-                style={{ backgroundColor: p.colorHex }}
-              >
-                {p.name.charAt(0)}
-              </span>
-              <span className="font-semibold text-lg">{p.name}</span>
-            </button>
-          ))}
-          {persons.length === 0 && !error && (
-            <p className="text-center text-sm" style={{ color: "var(--muted)" }}>
-              Cargando perfiles…
-            </p>
-          )}
-        </div>
-      ) : (
-        <div className="w-full max-w-xs flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span
-                className="h-8 w-8 rounded-full flex items-center justify-center text-white font-bold text-sm"
-                style={{ backgroundColor: selected.colorHex }}
-              >
-                {selected.name.charAt(0)}
-              </span>
-              <span className="font-semibold">{selected.name}</span>
-            </div>
-            <button
-              className="text-sm underline"
-              style={{ color: "var(--muted)" }}
-              onClick={() => {
-                setSelected(null);
-                setPin("");
-                setError(null);
-              }}
-            >
-              Cambiar
-            </button>
-          </div>
-
-          <input
-            autoFocus
-            type="password"
-            inputMode="numeric"
-            placeholder="PIN"
-            value={pin}
-            onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") submit();
-            }}
-            className="surface w-full text-center text-2xl tracking-[0.5em] py-3 outline-none"
-            maxLength={8}
-          />
-
-          {error && (
-            <p className="text-sm text-center" style={{ color: "var(--danger)" }}>
-              {error}
-            </p>
-          )}
-
+      <div className="w-full max-w-xs flex flex-col gap-3">
+        <p className="text-center text-sm font-medium" style={{ color: "var(--muted)" }}>
+          ¿Quién sos?
+        </p>
+        {persons.map((p) => (
           <button
-            onClick={submit}
-            disabled={loading || pin.length < 4}
-            className="rounded-full py-3 font-semibold text-white transition active:scale-[0.98] disabled:opacity-50"
-            style={{ backgroundColor: "var(--accent)" }}
+            key={p.id}
+            onClick={() => enter(p)}
+            disabled={loadingId !== null}
+            className="surface flex items-center gap-3 px-5 py-4 text-left transition active:scale-[0.98] disabled:opacity-60"
           >
-            {loading ? "Entrando…" : "Entrar"}
+            <span
+              className="h-10 w-10 rounded-full flex items-center justify-center text-white font-bold"
+              style={{ backgroundColor: p.colorHex }}
+            >
+              {p.name.charAt(0)}
+            </span>
+            <span className="font-semibold text-lg">
+              {p.name}
+              {loadingId === p.id ? "…" : ""}
+            </span>
           </button>
-
-          <p className="text-xs text-center" style={{ color: "var(--muted)" }}>
-            PIN de fábrica: 1234 (cambiarlo en Configuración)
+        ))}
+        {persons.length === 0 && !error && (
+          <p className="text-center text-sm" style={{ color: "var(--muted)" }}>
+            Cargando perfiles…
           </p>
-        </div>
-      )}
+        )}
+        {error && (
+          <p className="text-sm text-center" style={{ color: "var(--danger)" }}>
+            {error}
+          </p>
+        )}
+      </div>
     </main>
   );
 }

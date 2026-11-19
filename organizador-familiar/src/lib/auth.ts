@@ -16,12 +16,11 @@ function secretKey() {
   return new TextEncoder().encode(secret);
 }
 
+// El PIN quedó sin uso (login es solo por perfil), pero el esquema todavía
+// guarda un hash en Person.pinHash por compatibilidad con el seed; se
+// mantiene esta función para generarlo ahí.
 export async function hashPin(pin: string): Promise<string> {
   return bcrypt.hash(pin, 10);
-}
-
-export async function verifyPin(pin: string, hash: string): Promise<boolean> {
-  return bcrypt.compare(pin, hash);
 }
 
 export async function createSessionToken(personId: string): Promise<string> {
