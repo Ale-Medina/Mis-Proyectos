@@ -2,8 +2,8 @@
 
 Aplicación web real (no maqueta) para organizar tareas del hogar, cuidado de
 la nena, trabajo y tiempo personal entre dos adultos. Hecha con Next.js 16
-(App Router + Route Handlers como backend), Prisma y base de datos SQLite por
-defecto. Pensada para usarse todos los días desde el celular.
+(App Router + Route Handlers como backend), Prisma y Postgres. Desplegada en
+Vercel. Pensada para usarse todos los días desde el celular.
 
 Zona horaria: `America/Argentina/Cordoba` (UTC-3). Formato de fecha `DD/MM/AAAA`,
 hora 24h. Idioma: español.
@@ -17,9 +17,8 @@ hora 24h. Idioma: español.
 - **Autenticación real de dos perfiles** (Helu / Ale) con PIN, sesión por
   cookie firmada (JWT, `jose`) y PIN hasheado (`bcrypt`). Cada quien entra
   desde su propio dispositivo.
-- **Persistencia real en base de datos** (Prisma + SQLite por defecto, o
-  Postgres si se configura `DATABASE_URL`). Nada se guarda solo en memoria
-  ni solo en el navegador.
+- **Persistencia real en base de datos** (Prisma + Postgres vía
+  `DATABASE_URL`). Nada se guarda solo en memoria ni solo en el navegador.
 - **Sincronización entre dispositivos**: todos los datos viven en el
   servidor; cada cliente los refresca automáticamente cada ~20s y al volver
   a la pestaña/app (SWR). Si Helu marca algo hecho, Ale lo ve sin recargar
@@ -67,11 +66,10 @@ hora 24h. Idioma: español.
 - La gestión de categorías es básica (crear, no borrar/reordenar desde la UI).
 - El "entrenamiento de Helu" está cargado pero inactivo (como pidió el
   encargo), listo para activarse desde Configuración cuando corresponda.
-- No se desplegó la aplicación a ningún hosting real: ver sección 4 para
-  hacerlo. Hasta que no esté desplegada en una URL accesible desde los dos
-  celulares, la sincronización entre dispositivos no puede probarse "en la
-  vida real" (sí fue probada exhaustivamente en este entorno, simulando dos
-  sesiones de navegador independientes).
+- El despliegue a Vercel (sección 4) lo hizo el propio Ale desde el
+  dashboard de Vercel importando el repositorio de GitHub; yo preparé el
+  código para que funcione ahí (Postgres, variables de entorno, migración)
+  pero no tengo acceso a esa cuenta de Vercel.
 
 ## 2. Arquitectura y decisiones técnicas
 
@@ -83,9 +81,16 @@ hora 24h. Idioma: español.
   Next 16): hace un chequeo optimista de sesión y redirige a `/login`. La
   verificación real (firma del JWT + que la persona exista) se hace siempre
   en el servidor.
-- **Prisma 6** + SQLite (`prisma/schema.prisma`, `prisma/seed.ts`). El
-  archivo de base de datos vive en disco, en el propio servidor — por eso
-  dos dispositivos que hablan con el mismo servidor ven los mismos datos.
+- **Prisma 6** + Postgres (`prisma/schema.prisma`, `prisma/seed.ts`). La
+  base vive en un servidor Postgres (Vercel Postgres/Neon, Supabase, etc.),
+  no en el disco del servidor de la app — por eso dos dispositivos que
+  hablan con el mismo backend ven los mismos datos, y el despliegue puede
+  ser serverless (Vercel) sin perder nada entre invocaciones.
+- El generador de instancias (`ensureInstancesInRange`) usa `upsert` con
+  manejo explícito de la carrera de concurrencia típica de Postgres cuando
+  dos dispositivos piden datos casi al mismo tiempo (violación de la
+  restricción única se trata como "ya la creó la otra request", no como
+  error).
 - **Motor de tareas** (`src/lib/instances.ts`, `src/lib/rotation.ts`,
   `src/lib/dates.ts`): las plantillas (`TaskTemplate`) generan instancias
   (`TaskInstance`) de forma perezosa cuando se consulta un rango de fechas,
@@ -96,17 +101,20 @@ hora 24h. Idioma: español.
 
 ## 3. Correr la aplicación localmente
 
-Requisitos: Node.js 20+.
+Requisitos: Node.js 20+ y una base Postgres accesible (una gratuita de
+[Neon](https://neon.tech)/[Supabase](https://supabase.com), una de Vercel
+Postgres, o una instalada en tu máquina).
 
 ```bash
 cd organizador-familiar
 npm install                 # instala dependencias (y genera el cliente Prisma)
 cp .env.example .env        # copiá y ajustá las variables de entorno
+# pegá tu cadena de conexión Postgres en DATABASE_URL dentro de .env
 # generá un secreto propio para las cookies de sesión:
 #   openssl rand -base64 48
 # y pegalo en SESSION_SECRET dentro de .env
 
-npx prisma migrate deploy   # crea la base de datos SQLite (prisma/dev.db)
+npx prisma migrate deploy   # crea las tablas en tu base Postgres
 npm run db:seed             # carga personas, categorías y tareas iniciales
 
 npm run dev                 # http://localhost:3000
@@ -128,57 +136,39 @@ npm run start
 npm run db:reset   # borra y recrea la base, vuelve a correr el seed
 ```
 
-## 4. Desplegar para que Helu y Ale lo usen desde sus celulares
+## 4. Desplegar en Vercel (lo que estamos usando)
 
-La app necesita correr en un servidor accesible por internet (no alcanza
-con "npm run dev" en una compu local). Dos caminos simples:
-
-### Opción A — Render / Railway / Fly.io (más simple, sigue usando SQLite)
-
-1. Subí este repositorio a GitHub (o usá el que ya tenés).
-2. Creá un servicio **Web Service** de Node en Render/Railway/Fly apuntando
-   a la carpeta `organizador-familiar`.
-3. Build command: `npm install && npm run build`
-   Start command: `npm run start`
-4. Agregá un **disco persistente** montado en `organizador-familiar/prisma`
-   (en Render: "Persistent Disk"; en Fly: un *volume*). Sin esto, cada
-   despliegue nuevo borraría la base SQLite.
-5. Variables de entorno: `DATABASE_URL=file:./prisma/dev.db`,
-   `SESSION_SECRET=<un secreto largo propio>`.
-6. Primer despliegue: corré una vez `npx prisma migrate deploy && npm run db:seed`
-   contra ese servidor (la mayoría de estos servicios permite una "shell"
-   o un *release command* para esto).
-7. Listo: la URL pública que te den (ej. `https://organizador-familiar.onrender.com`)
-   es la que abren Helu y Ale desde sus celulares. Conviene agregarla a la
-   pantalla de inicio del teléfono (PWA "Agregar a inicio") para que se
-   sienta como una app.
-
-### Opción B — Vercel + Postgres (Supabase/Neon/Railway Postgres)
-
-Vercel no tiene disco persistente, así que SQLite no sirve ahí: hay que
-usar una base Postgres real. Prisma lo soporta cambiando una línea:
-
-1. Creá una base Postgres gratuita en [Supabase](https://supabase.com),
-   [Neon](https://neon.tech) o similar. Copiá su `DATABASE_URL`
-   (`postgresql://usuario:password@host:5432/basededatos`).
-2. En `prisma/schema.prisma`, cambiá:
-   ```prisma
-   datasource db {
-     provider = "postgresql"   // antes: "sqlite"
-     url      = env("DATABASE_URL")
-   }
+1. En [vercel.com](https://vercel.com), **Add New → Project** e importá el
+   repositorio de GitHub `Ale-Medina/organizador-familiar`.
+2. Pestaña **Storage** del proyecto → **Create Database** → **Postgres**
+   (Neon, integrado en Vercel). Esto crea la base y conecta
+   automáticamente `DATABASE_URL` (y variantes `POSTGRES_*`) al proyecto.
+3. **Settings → Environment Variables** → agregá `SESSION_SECRET` con un
+   valor largo y aleatorio (podés generarlo con `openssl rand -base64 48`
+   en tu máquina, o pegar cualquier texto random de 40+ caracteres).
+4. Volvé a desplegar (**Deployments → Redeploy**) para que tome las
+   variables nuevas.
+5. **Primer despliegue únicamente** — crear las tablas y cargar los datos
+   iniciales. Desde tu máquina, con la `DATABASE_URL` que te dio Vercel
+   (Storage → `.env.local` tab → copiarla) pegada en tu `.env` local:
+   ```bash
+   npx prisma migrate deploy
+   npm run db:seed
    ```
-3. Borrá `prisma/migrations` (son específicas de SQLite) y corré
-   `npx prisma migrate dev --name init` una vez en local apuntando a esa
-   base Postgres (con `DATABASE_URL` en `.env` apuntando a Supabase/Neon),
-   para generar las migraciones correctas de Postgres.
-4. Desplegá el proyecto en Vercel (importar el repo de GitHub, root
-   directory = `organizador-familiar`).
-5. Variables de entorno en Vercel: `DATABASE_URL` (la de Supabase/Neon) y
-   `SESSION_SECRET`.
-6. Corré el seed una vez contra esa base (`npm run db:seed` en tu máquina,
-   con `.env` apuntando a la base de producción) para crear los perfiles y
-   tareas iniciales.
+   (Los migrate/seed solo hace falta correrlos una vez contra la base de
+   producción; las próximas veces que subas cambios de código, Vercel
+   solo necesita rebuildear.)
+6. Listo: la URL que te dio Vercel (ej.
+   `https://organizador-familiar.vercel.app`) es la que abren Helu y Ale
+   desde sus celulares. Conviene agregarla a la pantalla de inicio del
+   teléfono ("Agregar a inicio") para que se sienta como una app.
+
+### Alternativa sin Vercel: Render / Railway / Fly.io
+
+También funciona en cualquier servicio que corra `npm run build` /
+`npm run start` como proceso persistente (no serverless), apuntando la
+misma `DATABASE_URL` de Postgres y agregando `SESSION_SECRET`. No hace
+falta disco persistente porque los datos ya no viven en un archivo local.
 
 No usé Supabase Auth/Realtime a propósito: con 2 usuarios fijos, un login
 por PIN propio y *polling* cada 20s son más simples de mantener y no
@@ -205,7 +195,7 @@ con una consulta SQL puntual después.
 
 | Variable         | Para qué sirve                                         | Ejemplo |
 |------------------|---------------------------------------------------------|---------|
-| `DATABASE_URL`   | Conexión a la base de datos (SQLite o Postgres)          | `file:./dev.db` |
+| `DATABASE_URL`   | Conexión a la base Postgres                              | `postgresql://usuario:password@host:5432/basededatos` |
 | `SESSION_SECRET` | Firma las cookies de sesión. Generar con `openssl rand -base64 48` | — |
 
 Nunca se exponen claves privadas al navegador: todo lo sensible vive en
@@ -224,3 +214,10 @@ Route Handlers del servidor.
   plantilla o desactivarla.
 - Build de producción (`npm run build`) y recorrido completo de todas las
   pantallas sin errores de consola, en vista mobile y desktop.
+- Migración completa a **Postgres real** (instancia local de prueba, no
+  SQLite): migración inicial aplicada, seed corrido, y toda la batería de
+  pruebas (login, completar tareas, subtareas, reasignar, sincronización
+  entre dos sesiones, edición en Configuración) repetida con éxito. Se
+  encontró y corrigió una condición de carrera real del generador de
+  tareas bajo Postgres cuando dos pedidos llegan al mismo tiempo (ver
+  sección 2).

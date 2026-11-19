@@ -1,15 +1,14 @@
 // Organizador Familiar - esquema de datos
-// Por defecto usa SQLite (archivo local, persistente en disco del servidor).
-// Para producción con múltiples instancias/serverless, cambiar "provider" a
-// "postgresql" y DATABASE_URL a una base Postgres (ej. Supabase, Neon, Railway).
-// Ver README.md sección "Base de datos y despliegue".
+// Producción: Postgres (ej. Vercel Postgres/Neon, Supabase, Railway) vía
+// DATABASE_URL. Para desarrollo local sin Postgres a mano, ver
+// prisma/schema.sqlite.prisma y README.md sección "Base de datos y despliegue".
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 

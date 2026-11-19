@@ -8,6 +8,7 @@
 // borran ni se auto-completan: su estado "atrasada" se calcula al vuelo
 // comparando la fecha/ventana de vencimiento contra el día de hoy.
 
+import { Prisma } from "@prisma/client";
 import { prisma } from "./prisma";
 import { resolveRotationPerson, type RotationMode } from "./rotation";
 import {
@@ -198,20 +199,33 @@ export async function ensureInstancesInRange(from: Date, to: Date) {
             occurrenceIndexInMonth: occ.occurrenceIndexInMonth,
           });
 
-      await prisma.taskInstance.upsert({
-        where: {
-          templateId_date: { templateId: template.id, date: occ.date },
-        },
-        update: {},
-        create: {
-          templateId: template.id,
-          date: occ.date,
-          windowStart: occ.windowStart,
-          windowEnd: occ.windowEnd,
-          assignedPersonId,
-          subtaskState: initialSubtaskState,
-        },
-      });
+      try {
+        await prisma.taskInstance.upsert({
+          where: {
+            templateId_date: { templateId: template.id, date: occ.date },
+          },
+          update: {},
+          create: {
+            templateId: template.id,
+            date: occ.date,
+            windowStart: occ.windowStart,
+            windowEnd: occ.windowEnd,
+            assignedPersonId,
+            subtaskState: initialSubtaskState,
+          },
+        });
+      } catch (err) {
+        // Dos pedidos concurrentes (ej. el polling de dos dispositivos a la
+        // vez) pueden intentar crear la misma instancia al mismo tiempo. El
+        // upsert de Prisma no es una operación atómica a nivel de base de
+        // datos en todos los casos, así que una carrera puede chocar contra
+        // la restricción única: eso simplemente significa que la otra
+        // request ya la creó, y como no queremos pisar nada (update: {}),
+        // no hay nada más que hacer.
+        const isDuplicate =
+          err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002";
+        if (!isDuplicate) throw err;
+      }
     }
   }
 }
