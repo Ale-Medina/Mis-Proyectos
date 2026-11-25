@@ -15,8 +15,8 @@ hora 24h. Idioma: español.
   Historial, Configuración. Responsive, con barra inferior en celular y
   barra lateral en pantallas grandes.
 - **Perfiles reales de Helu y Ale** con sesión por cookie firmada (JWT,
-  `jose`): se elige el nombre y se entra directo, sin PIN (app privada de
-  uso familiar, pensada para que sea rápido desde el celular). Cada quien
+  `jose`): primero una contraseña única compartida (`APP_PASSWORD`) para
+  entrar a la app, y después se elige el nombre. Cada quien
   entra desde su propio dispositivo.
 - **Persistencia real en base de datos** (Prisma + Postgres vía
   `DATABASE_URL`). Nada se guarda solo en memoria ni solo en el navegador.
@@ -95,9 +95,10 @@ hora 24h. Idioma: español.
   `src/lib/dates.ts`): las plantillas (`TaskTemplate`) generan instancias
   (`TaskInstance`) de forma perezosa cuando se consulta un rango de fechas,
   siempre en zona horaria Argentina, sin importar dónde corra el servidor.
-- **Autenticación** mínima a propósito (2 perfiles fijos, sin PIN ni
-  contraseña): se elige el nombre y se entra. Pensada para una app
-  familiar privada en dispositivos propios, no para registro público.
+- **Autenticación** mínima a propósito: una única contraseña compartida
+  (`APP_PASSWORD`, no hay PIN por perfil) y después se elige el nombre.
+  Pensada para una app familiar privada en dispositivos propios, no para
+  registro público.
 
 ## 3. Correr la aplicación localmente
 
@@ -120,8 +121,9 @@ npm run db:seed             # carga personas, categorías y tareas iniciales
 npm run dev                 # http://localhost:3000
 ```
 
-Perfiles de fábrica: **Helu** y **Ale**. Se entra tocando el nombre, sin
-PIN ni contraseña.
+Perfiles de fábrica: **Helu** y **Ale**. Se entra con la contraseña que
+hayas puesto en `APP_PASSWORD` (una sola, compartida por los dos) y
+después tocando el nombre.
 
 Para producción local:
 
@@ -143,9 +145,11 @@ npm run db:reset   # borra y recrea la base, vuelve a correr el seed
 2. Pestaña **Storage** del proyecto → **Create Database** → **Postgres**
    (Neon, integrado en Vercel). Esto crea la base y conecta
    automáticamente `DATABASE_URL` (y variantes `POSTGRES_*`) al proyecto.
-3. **Settings → Environment Variables** → agregá `SESSION_SECRET` con un
-   valor largo y aleatorio (podés generarlo con `openssl rand -base64 48`
-   en tu máquina, o pegar cualquier texto random de 40+ caracteres).
+3. **Settings → Environment Variables** → agregá:
+   - `SESSION_SECRET`: un valor largo y aleatorio (podés generarlo con
+     `openssl rand -base64 48` en tu máquina, o pegar cualquier texto
+     random de 40+ caracteres).
+   - `APP_PASSWORD`: la contraseña que van a usar Helu y Ale para entrar.
 4. Volvé a desplegar (**Deployments → Redeploy**) para que tome las
    variables nuevas.
 5. **Primer despliegue únicamente** — crear las tablas y cargar los datos
@@ -167,16 +171,17 @@ npm run db:reset   # borra y recrea la base, vuelve a correr el seed
 
 También funciona en cualquier servicio que corra `npm run build` /
 `npm run start` como proceso persistente (no serverless), apuntando la
-misma `DATABASE_URL` de Postgres y agregando `SESSION_SECRET`. No hace
-falta disco persistente porque los datos ya no viven en un archivo local.
+misma `DATABASE_URL` de Postgres y agregando `SESSION_SECRET` y
+`APP_PASSWORD`. No hace falta disco persistente porque los datos ya no
+viven en un archivo local.
 
-No usé Supabase Auth/Realtime a propósito: con 2 usuarios fijos y sin PIN,
-el login es elegir el nombre y entrar; *polling* cada 20s es suficiente
-para sincronizar y no depende de configurar un proveedor externo
-adicional — pero si en el futuro quisieran invitar más perfiles o
-requerir alguna verificación, migrar a Supabase (Auth + Realtime) sobre
-este mismo esquema de Postgres es sencillo, porque el modelo de datos ya
-es relacional estándar.
+No usé Supabase Auth/Realtime a propósito: con 2 usuarios fijos y una
+contraseña compartida, el login es simple; *polling* cada 20s es
+suficiente para sincronizar y no depende de configurar un proveedor
+externo adicional — pero si en el futuro quisieran invitar más perfiles o
+requerir autenticación individual, migrar a Supabase (Auth + Realtime)
+sobre este mismo esquema de Postgres es sencillo, porque el modelo de
+datos ya es relacional estándar.
 
 ## 5. Cómo "invitar" al segundo usuario
 
@@ -184,8 +189,8 @@ No hay un sistema de invitaciones por correo: los dos perfiles (Helu y Ale)
 ya existen desde el primer `npm run db:seed`. Para habilitar a la segunda
 persona:
 
-1. Compartile la URL pública de la app (la de Render/Vercel/etc.).
-2. Que entre a `/login` y toque su nombre — no hay PIN ni contraseña.
+1. Compartile la URL pública de la app y la contraseña (`APP_PASSWORD`).
+2. Que entre a `/login`, ponga la contraseña y toque su nombre.
 
 Si quisieran cambiar los nombres "Helu"/"Ale" por otros, se edita
 directamente en `prisma/seed.ts` (campo `name`) antes de correr el seed, o
@@ -197,6 +202,7 @@ con una consulta SQL puntual después.
 |------------------|---------------------------------------------------------|---------|
 | `DATABASE_URL`   | Conexión a la base Postgres                              | `postgresql://usuario:password@host:5432/basededatos` |
 | `SESSION_SECRET` | Firma las cookies de sesión. Generar con `openssl rand -base64 48` | — |
+| `APP_PASSWORD`   | Contraseña única compartida para entrar a la app (Helu y Ale usan la misma) | — |
 
 Nunca se exponen claves privadas al navegador: todo lo sensible vive en
 Route Handlers del servidor.

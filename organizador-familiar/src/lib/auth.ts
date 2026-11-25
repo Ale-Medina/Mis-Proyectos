@@ -16,11 +16,23 @@ function secretKey() {
   return new TextEncoder().encode(secret);
 }
 
-// El PIN quedó sin uso (login es solo por perfil), pero el esquema todavía
-// guarda un hash en Person.pinHash por compatibilidad con el seed; se
-// mantiene esta función para generarlo ahí.
+// El PIN por perfil quedó sin uso (el acceso ahora es una única contraseña
+// compartida), pero el esquema todavía guarda un hash en Person.pinHash por
+// compatibilidad con el seed; se mantiene esta función para generarlo ahí.
 export async function hashPin(pin: string): Promise<string> {
   return bcrypt.hash(pin, 10);
+}
+
+/**
+ * Contraseña única compartida para entrar a la app (no hay una por perfil).
+ * Se configura con la variable de entorno APP_PASSWORD.
+ */
+export function checkAppPassword(password: string): boolean {
+  const expected = process.env.APP_PASSWORD;
+  if (!expected) {
+    throw new Error("APP_PASSWORD no está configurada. Definila en .env.");
+  }
+  return password === expected;
 }
 
 export async function createSessionToken(personId: string): Promise<string> {
