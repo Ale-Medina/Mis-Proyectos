@@ -20,6 +20,15 @@ export async function POST(request: Request) {
   });
   if (!person) return badRequest("Perfil inexistente");
 
-  await setSessionCookie(person.id);
+  try {
+    await setSessionCookie(person.id);
+  } catch (err) {
+    // Si falta SESSION_SECRET (o es muy corto) en las variables de entorno,
+    // esto explota al firmar la cookie. Devolver el motivo en vez de un 500
+    // mudo ahorra horas de diagnóstico a ciegas.
+    const message = err instanceof Error ? err.message : "Error desconocido al crear la sesión";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+
   return NextResponse.json({ ok: true, person: { id: person.id, name: person.name } });
 }
